@@ -20,7 +20,7 @@ Este projeto foi desenvolvido como parte da disciplina **PW2 (Programação para
 ## Estrutura do Projeto
 
 A estrutura do projeto é organizada da seguinte forma:
-
+```
 meu-site/
 ├── index.html # Página principal com a galeria de carros
 ├── css/
@@ -29,3 +29,4 @@ meu-site/
 │ └── script.js # Scripts para interatividade (modais, quiz, etc)
 └── imgs/
 └── (imagens dos carros) # Imagens dos carros antigos
+```
