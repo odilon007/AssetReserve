@@ -37,3 +37,5 @@ meu-site/
 [@MatheusMachado16](https://github.com/MatheusMachado16)
 
 [@omarhenriqu3](https://github.com/omarhenriqu3)
+
+[@DaviPatricio06](https://github.com/DaviPatricio06)
