@@ -31,14 +31,14 @@
     <div class="row g-2 justify-content-center">
       <div class="col-md-3 col-6">
         <select id="filter-category" class="form-select">
-          <option value="all">Todos os Ativos</option>
+          <option value="">Todos os Ativos</option>
           <option value="sala">Salas</option>
           <option value="equipamento">Equipamentos</option>
         </select>
       </div>
       <div class="col-md-3 col-6">
         <select id="filter-capacity" class="form-select">
-          <option value="all">Todas as Capacidades</option>
+          <option value="">Todas as Capacidades</option>
           <option value="small">Pequena (até 5 pessoas)</option>
           <option value="medium">Média (6 a 10 pessoas)</option>
           <option value="large">Grande (10+ pessoas)</option>
@@ -48,33 +48,14 @@
   </section>
 
   <!-- 🔹 Galeria de Ativos -->
-  <main class="container">
-    <div id="gallery" class="row g-4">
-      <!-- Exemplos de cards (gerados dinamicamente pelo JS futuramente) -->
-      <div class="col-md-4 col-sm-6">
-        <div class="card shadow-sm ativo" data-category="sala" data-capacity="medium">
-          <img src="./public/imgs/sala1.jpg" class="card-img-top" alt="Sala de Reunião A">
-          <div class="card-body">
-            <h5 class="card-title">Sala de Reunião A</h5>
-            <p class="card-text text-muted">Capacidade: 8 pessoas</p>
-            <button class="btn open-modal btn-primary btn-reservar" data-id="1">Reservar</button>
-          </div>
-        </div>
-      </div>
 
 
-      <div class="col-md-4 col-sm-6">
-        <div class="card shadow-sm ativo" data-category="equipamento" data-capacity="small">
-          <img src="./public/imgs/projetor1.jpg" class="card-img-top" alt="Projetor Epson">
-          <div class="card-body">
-            <h5 class="card-title">Projetor Epson</h5>
-            <p class="card-text text-muted">Resolução: Full HD</p>
-            <button class="btn open-modal btn-primary" data-id="2">Reservar</button>
-          </div>
-        </div>
-      </div>
-    </div>
+  <main class="container row g-4 ">
+
+      <!-- CARDS -->
+       
   </main>
+
 
   <!-- 🔹 Modal de Detalhes/Reserva -->
   <div class="meu-modal" id="meuModal">
