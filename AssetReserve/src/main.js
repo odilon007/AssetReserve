@@ -1,24 +1,25 @@
-import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
+const modal = document.getElementById("meuModal");
+const botoesAbrir = document.querySelectorAll(".open-modal");
+const btnFechar = document.getElementById("btnFechar")
 
-document.querySelector('#app').innerHTML = `
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
-`
+function abrirModal() {
+  modal.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
 
-setupCounter(document.querySelector('#counter'))
+function fecharModal() {
+  modal.classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+botoesAbrir.forEach(btn => {
+  btn.addEventListener("click", abrirModal);
+});
+
+btnFechar.addEventListener("click", fecharModal);
+
+modal.addEventListener("click", (e) => {
+  if (e.target == modal) {
+    fecharModal();
+  }
+});
