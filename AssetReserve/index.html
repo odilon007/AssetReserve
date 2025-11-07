@@ -1,18 +1,123 @@
-<!doctype html>
-<html lang="pt-br">
-  <head>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AssetReserve - Reserva de Ativos</title>
 
-  <!--  Ícones -->
+  <!-- ✅ CSS principal -->
+  <link rel="stylesheet" href="./src/css/style.css" />
+
+  <!-- ✅ Bootstrap (opcional, ajuda no layout responsivo) -->
+  <link 
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" 
+    rel="stylesheet"
+  >
+
+  <!-- Ícone -->
   <link rel="icon" type="image/x-icon" href="public/icons/favicon.ico">
   <link rel="icon" type="image/png" sizes="16x16" href="public/icons/favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="public/icons/favicon-32x32.png">
-
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AssetReserve</title>
-
 </head>
+<body>
+  <!-- 🔹 Cabeçalho -->
+  <header class="bg-primary text-white text-center py-4 mb-4">
+    <h1>AssetReserve</h1>
+    <p class="mb-0">Sistema de Reserva de Salas e Equipamentos</p>
+  </header>
 
-  <body>
+  <!-- 🔹 Filtro -->
+  <section class="container mb-4">
+    <div class="row g-2 justify-content-center">
+      <div class="col-md-3 col-6">
+        <select id="filter-category" class="form-select">
+          <option value="all">Todos os Ativos</option>
+          <option value="sala">Salas</option>
+          <option value="equipamento">Equipamentos</option>
+        </select>
+      </div>
+      <div class="col-md-3 col-6">
+        <select id="filter-capacity" class="form-select">
+          <option value="all">Todas as Capacidades</option>
+          <option value="small">Pequena (até 5 pessoas)</option>
+          <option value="medium">Média (6 a 10 pessoas)</option>
+          <option value="large">Grande (10+ pessoas)</option>
+        </select>
+      </div>
+    </div>
+  </section>
 
+  <!-- 🔹 Galeria de Ativos -->
+  <main class="container">
+    <div id="gallery" class="row g-4">
+      <!-- Exemplos de cards (gerados dinamicamente pelo JS futuramente) -->
+      <div class="col-md-4 col-sm-6">
+        <div class="card shadow-sm ativo" data-category="sala" data-capacity="medium">
+          <img src="./public/imgs/sala1.jpg" class="card-img-top" alt="Sala de Reunião A">
+          <div class="card-body">
+            <h5 class="card-title">Sala de Reunião A</h5>
+            <p class="card-text text-muted">Capacidade: 8 pessoas</p>
+            <button class="btn btn-primary btn-reservar" data-id="1">Reservar</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 col-sm-6">
+        <div class="card shadow-sm ativo" data-category="equipamento" data-capacity="small">
+          <img src="./public/imgs/projetor1.jpg" class="card-img-top" alt="Projetor Epson">
+          <div class="card-body">
+            <h5 class="card-title">Projetor Epson</h5>
+            <p class="card-text text-muted">Resolução: Full HD</p>
+            <button class="btn btn-primary btn-reservar" data-id="2">Reservar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 🔹 Modal de Detalhes/Reserva -->
+  <div class="modal fade" id="modalReserva" tabindex="-1" aria-labelledby="modalReservaLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalReservaLabel">Reserva de Ativo</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="formReserva">
+            <div class="mb-3">
+              <label for="ativoSelecionado" class="form-label">Ativo</label>
+              <input type="text" id="ativoSelecionado" class="form-control" readonly>
+            </div>
+            <div class="mb-3">
+              <label for="dataReserva" class="form-label">Data</label>
+              <input type="date" id="dataReserva" class="form-control" required>
+            </div>
+            <div class="mb-3">
+              <label for="horaReserva" class="form-label">Horário</label>
+              <input type="time" id="horaReserva" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-success w-100">Confirmar Reserva</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔹 Rodapé -->
+  <footer class="bg-light text-center py-3 mt-5">
+    <p class="mb-0">
+      Desenvolvido por 
+      <a href="https://github.com/odilon007" target="_blank">@odilon007</a>,
+      <a href="https://github.com/MatheusMachado16" target="_blank">@MatheusMachado16</a>,
+      <a href="https://github.com/omarhenriqu3" target="_blank">@omarhenriqu3</a>,
+      <a href="https://github.com/DaviPatricio06" target="_blank">@DaviPatricio06</a>
+    </p>
+  </footer>
+
+  <!-- ✅ Scripts -->
+  <script src="./src/js/script.js"></script>
+  <script src="./src/main.js" type="module"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
