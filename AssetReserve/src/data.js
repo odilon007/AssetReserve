@@ -1,17 +1,20 @@
 const ativos = [
     {
-        title: 'Sala de Reunião A',
-        image: './public/imgs/sala1.jpg',
-        tipo: 'sala',
         id: 's1',
-        descricao: 'Capacidade: 8 pessoas'
+        title: 'Sala de Reunião A',
+        tipo: 'sala',
+        descricao: 'Capacidade: 8 pessoas',
+        capacidade: 'medium',
+        image: './public/imgs/sala1.jpg',
+        
     },
     {
-        title: 'Projetor Epson',
-        image: './public/imgs/projetor1.jpg',
-        tipo: 'equipamento',
         id: 'e1',
-        descricao: 'Resolução: Full HD'
+        title: 'Projetor Epson',
+        tipo: 'equipamento',
+        descricao: 'Resolução: Full HD',
+        capacidade: 'small',
+        image: './public/imgs/projetor1.jpg',
     },
 ];
 
