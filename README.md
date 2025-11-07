@@ -1,96 +1,103 @@
-## 🚀 AssetBook - Interface de Reserva de Ativos
+# 🚀AssetReserve - Interface de Reserva de Ativos
 
-Este projeto foi desenvolvido como parte das disciplinas PW2 (Programação para Web 2) e Engenharia de Requisitos. Ele tem como objetivo apresentar um site interativo para reserva de ativos (salas e equipamentos), utilizando HTML, CSS e JavaScript. O site exibe uma galeria de ativos disponíveis, permite ao usuário ver detalhes sobre os itens e interagir com o conteúdo de forma dinâmica para simular uma reserva.
+Este projeto foi desenvolvido como parte das disciplinas PW2 (Programação para Web 2) e Engenharia de Requisitos.
+O objetivo é apresentar um site interativo para reserva de ativos (salas e equipamentos), utilizando HTML, CSS e JavaScript.
 
-## 📌 Funcionalidades
+O site exibe uma galeria de ativos disponíveis, permite ao usuário ver detalhes sobre os itens e interagir com o conteúdo de forma dinâmica para simular uma reserva.
+
+## 📌Funcionalidades
 
 Galeria de Ativos Disponíveis: Exibição de todas as salas de reunião e equipamentos (projetores, câmeras, etc.) com imagens e status.
 
-Modal de Detalhes/Reserva: Ao clicar em um ativo, o usuário pode visualizar informações adicionais (como capacidade da sala, conexões disponíveis) e ver um formulário para agendamento.
+Modal de Detalhes/Reserva: Ao clicar em um ativo, o usuário visualiza informações adicionais (capacidade da sala, conexões, etc.) e um formulário de agendamento.
 
-Filtro Dinâmico: Permite ao usuário filtrar os ativos visíveis por categoria (sala ou equipamento) e capacidade.
+Filtro Dinâmico: Permite filtrar ativos por categoria (sala ou equipamento) e capacidade.
 
-Calendário Interativo: Um seletor de data para simular a escolha do dia e horário da reserva.
+Calendário Interativo: Seletor de data para simular escolha de dia e horário.
 
-Estilo Responsivo: O layout do site é responsivo, adaptando-se a diferentes tamanhos de tela (desktop, tablet e celular).
+Estilo Responsivo: Layout adaptável para desktop, tablet e celular.
 
-## 🛠️ Tecnologias Utilizadas
+## 🛠️Tecnologias Utilizadas
 
-HTML: Para estruturar o conteúdo da página (os "cards" dos ativos, os filtros, etc.).
+### HTML5: Estrutura do conteúdo da página.
 
-CSS: Para estilizar a página e criar um design moderno e responsivo (usando Flexbox, Grid e Media Queries).
+### CSS3: Estilização e design moderno (usando Flexbox, Grid e Media Queries).
 
-JavaScript: Para criar interatividade no site, como a exibição dos modais de reserva, o funcionamento dos filtros e a interação com o calendário.
+### JavaScript: Interatividade — modais, filtros e calendário.
 
-Vite: Ferramenta de build para criar o ambiente de desenvolvimento rápido e eficiente, com suporte a ES Modules e Hot Module Replacement (HMR).
+### Vite: Build tool para desenvolvimento rápido (com HMR e ES Modules).
 
-Bootstrap (opcional): Para facilitar o design responsivo e a criação de componentes como botões, modais e o sistema de grid.
+### Bootstrap (opcional): Facilita componentes e sistema de grid responsivo.
 
-## 📂 Estrutura do Projeto
+## 📂Estrutura do Projeto
 
-A estrutura do projeto foi organizada da seguinte maneira, seguindo a convenção de arquivos do Vite:
-
-AssetBook/
-├── index.html          # Página principal com a galeria de ativos
+```
+AssetReserve/
+├── index.html                 # Página principal com a galeria de ativos
 ├── public/
-│   └── imgs/           # Imagens dos ativos (salas, projetores, etc.)
+│   └── imgs/                  # Imagens dos ativos (salas, projetores, etc.)
 ├── src/
-│   ├── assets/         # Arquivos estáticos (imagens, ícones, etc.)
+│   ├── assets/                # Arquivos estáticos (ícones, etc.)
 │   ├── css/
-│   │   └── style.css   # Estilos para o layout e design do site
+│   │   └── style.css          # Estilos do layout e design do site
 │   ├── js/
-│   │   └── script.js   # Scripts para interatividade (modais, filtros, calendário)
-│   └── main.js         # Ponto de entrada do JavaScript (inicia a aplicação)
+│   │   └── script.js          # Scripts (modais, filtros, calendário)
+│   └── main.js                # Ponto de entrada JS (inicia a aplicação)
 ├── package-lock.json
-├── package.json        # Dependências e scripts de desenvolvimento
-└── README.md           # Este arquivo
+├── package.json               # Dependências e scripts do projeto
+└── README.md                  # Este arquivo
+```
 
-## ⚙️ Instalação
-Pré-requisitos
+## ⚙️Instalação
 
-Node.js
- (versão 14 ou superior)
+### 🧩Pré-requisitos
 
-NPM
- ou Yarn
- para gerenciar pacotes
+Node.js (versão 14 ou superior)
 
-Passos para configuração:
+NPM ou Yarn
 
-Clone o repositório:
+### 🚀Passos para configuração
 
-git clone https://github.com/usuario/assetbook.git
+#### Clone o repositório
+git clone https://github.com/odilon007/Projeto-PW2.git
 
-Instale as dependências:
-Navegue até a pasta do projeto e instale as dependências:
+#### Acesse o diretório do projeto
+cd Projeto-PW2
 
-cd assetbook
+#### Instale as dependências
 npm install
 
-Inicie o servidor de desenvolvimento com o Vite:
-
+#### Inicie o servidor de desenvolvimento
 npm run dev
 
-A aplicação estará disponível no navegador em http://localhost:5173.
+A aplicação estará disponível em:
+👉 http://localhost:5173
 
-## 🌟 Melhorias Futuras
+## 🌟Melhorias Futuras
 
-O projeto pode ser expandido com várias funcionalidades adicionais, como:
-Persistência de Dados: Adicionar um sistema de armazenamento local (como LocalStorage) ou um backend para salvar as reservas feitas.
-Autenticação de Usuários: Implementar um sistema de login para usuários, permitindo controle de reservas por perfil.
-Notificações de Reservas: Implementar um sistema de alertas ou notificações para confirmar ou lembrar os usuários sobre suas reservas.
-Interface Avançada: Aprimorar o design e a experiência do usuário com animações, transições e integração com frameworks de UI (como Tailwind CSS ou Bootstrap).
+💾 Persistência de Dados: Integração com LocalStorage ou backend real.
 
-## 🤝 Contribuindo
+🔐 Autenticação de Usuários: Sistema de login e controle de reservas.
 
-Se você deseja contribuir com o projeto, fique à vontade! Para isso, siga os seguintes passos:
-Faça um fork do repositório
-Crie uma branch para sua feature ou correção (git checkout -b minha-feature)
-Realize suas alterações
-Envie suas alterações para o repositório principal (git push origin minha-feature)
-Abra um pull request explicando suas modificações
+🔔 Notificações de Reservas: Alertas e lembretes de agendamento.
 
-## 👨‍💻 Equipe
+🎨 Interface Avançada: Animações e integração com Tailwind CSS ou Bootstrap.
+
+## 🤝Contribuindo
+
+Contribuições são bem-vindas! 💡
+Para contribuir:
+
+### Faça um fork do repositório
+### Crie uma branch para sua feature
+git checkout -b minha-feature
+
+### Realize as alterações e envie
+git push origin minha-feature
+
+Depois, abra um Pull Request descrevendo suas modificações.
+
+## 👨‍💻Equipe
 
 [@odilon007](https://github.com/odilon007)
 
