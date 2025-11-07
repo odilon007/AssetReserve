@@ -7,27 +7,27 @@ O site exibe uma galeria de ativos disponíveis, permite ao usuário ver detalhe
 
 ## 📌Funcionalidades
 
-Galeria de Ativos Disponíveis: Exibição de todas as salas de reunião e equipamentos (projetores, câmeras, etc.) com imagens e status.
+- Galeria de Ativos Disponíveis: Exibição de todas as salas de reunião e equipamentos (projetores, câmeras, etc.) com imagens e status.
 
-Modal de Detalhes/Reserva: Ao clicar em um ativo, o usuário visualiza informações adicionais (capacidade da sala, conexões, etc.) e um formulário de agendamento.
+- Modal de Detalhes/Reserva: Ao clicar em um ativo, o usuário visualiza informações adicionais (capacidade da sala, conexões, etc.) e um formulário de agendamento.
 
-Filtro Dinâmico: Permite filtrar ativos por categoria (sala ou equipamento) e capacidade.
+- Filtro Dinâmico: Permite filtrar ativos por categoria (sala ou equipamento) e capacidade.
 
-Calendário Interativo: Seletor de data para simular escolha de dia e horário.
+- Calendário Interativo: Seletor de data para simular escolha de dia e horário.
 
-Estilo Responsivo: Layout adaptável para desktop, tablet e celular.
+- Estilo Responsivo: Layout adaptável para desktop, tablet e celular.
 
 ## 🛠️Tecnologias Utilizadas
 
- HTML5: Estrutura do conteúdo da página.
+ **HTML5** - Estrutura do conteúdo da página.
 
- CSS3: Estilização e design moderno (usando Flexbox, Grid e Media Queries).
+ **CSS3** - Estilização e design moderno (usando Flexbox, Grid e Media Queries).
 
- JavaScript: Interatividade — modais, filtros e calendário.
+ **JavaScript** - Interatividade — modais, filtros e calendário.
 
- Vite: Build tool para desenvolvimento rápido (com HMR e ES Modules).
+ **Vite** - Build tool para desenvolvimento rápido (com HMR e ES Modules).
 
- Bootstrap (opcional): Facilita componentes e sistema de grid responsivo.
+ **Bootstrap** (opcional) - Facilita componentes e sistema de grid responsivo.
 
 ## 📂Estrutura do Projeto
 
@@ -48,30 +48,37 @@ AssetReserve/
 └── README.md                  # Este arquivo
 ```
 
-## ⚙️Instalação
+## ⚙️ Instalação
 
-### 🧩Pré-requisitos
+### 🧩 Pré-requisitos
 
-Node.js (versão 14 ou superior)
+- **Node.js** (versão 14 ou superior)  
+- **NPM** ou **Yarn**
 
-NPM ou Yarn
+---
 
-### 🚀Passos para configuração
+### 🚀 Passos para configuração
 
-#### Clone o repositório
-git clone https://github.com/odilon007/Projeto-PW2.git
+1. **Clone o repositório:**
+   ```bash
+   git clone https://github.com/odilon007/Projeto-PW2.git
 
-#### Acesse o diretório do projeto
-cd Projeto-PW2
 
-#### Instale as dependências
-npm install
+2. **Acesse o diretório do projeto**
+    ```bash
+    cd Projeto-PW2
 
-#### Inicie o servidor de desenvolvimento
-npm run dev
+3. **Instale as dependências**
+    ```bash
+    npm install
 
-A aplicação estará disponível em:
-👉 http://localhost:5173
+4. **Inicie o servidor de desenvolvimento**
+    ```bash
+    npm run dev
+
+5. **A aplicação estará disponível em:**
+    ```cpp
+    👉 http://localhost:5173
 
 ## 🌟Melhorias Futuras
 
@@ -88,12 +95,14 @@ A aplicação estará disponível em:
 Contribuições são bem-vindas! 💡
 Para contribuir:
 
-### Faça um fork do repositório
-### Crie uma branch para sua feature
-git checkout -b minha-feature
+1. **Faça um fork do repositório**
+2. **Crie uma branch para sua feature**
+    ```bash
+    git checkout -b minha-feature
 
-### Realize as alterações e envie
-git push origin minha-feature
+3. **Realize as alterações e envie**
+    ```bash
+    git push origin minha-feature
 
 Depois, abra um Pull Request descrevendo suas modificações.
 
