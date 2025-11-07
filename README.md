@@ -19,15 +19,15 @@ Estilo Responsivo: Layout adaptável para desktop, tablet e celular.
 
 ## 🛠️Tecnologias Utilizadas
 
-### HTML5: Estrutura do conteúdo da página.
+ HTML5: Estrutura do conteúdo da página.
 
-### CSS3: Estilização e design moderno (usando Flexbox, Grid e Media Queries).
+ CSS3: Estilização e design moderno (usando Flexbox, Grid e Media Queries).
 
-### JavaScript: Interatividade — modais, filtros e calendário.
+ JavaScript: Interatividade — modais, filtros e calendário.
 
-### Vite: Build tool para desenvolvimento rápido (com HMR e ES Modules).
+ Vite: Build tool para desenvolvimento rápido (com HMR e ES Modules).
 
-### Bootstrap (opcional): Facilita componentes e sistema de grid responsivo.
+ Bootstrap (opcional): Facilita componentes e sistema de grid responsivo.
 
 ## 📂Estrutura do Projeto
 
