@@ -1,4 +1,5 @@
-import ativos from './data.js'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import ativos from './js/data.js'
 
 // CARDS
 
@@ -75,4 +76,3 @@ document.getElementById('filter-category').addEventListener('change', function()
     }
   })
 })
-console.log("heeeeee")
