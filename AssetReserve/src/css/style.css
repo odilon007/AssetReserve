@@ -88,97 +88,100 @@ header {
   }
 }
 
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
-.meu-modal {
+.asset {
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 200px;
+  cursor: pointer;
+}
+
+.asset img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.status {
+  color: green;
+  font-weight: bold;
+}
+
+.status.unavailable {
+  color: red;
+}
+
+.modal {
   display: none;
-  /* começa escondido */
   position: fixed;
-  inset: 0;
-  /* top:0; right:0; bottom:0; left:0; */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0, 0, 0, 0.5);
   justify-content: center;
-  /* centraliza horizontal */
   align-items: center;
-  /* centraliza vertical */
-  z-index: 1000;
 }
 
-.meu-modal.open {
-  display: flex;
-}
-
-.modal-header {
-  display: grid;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-}
-
-.modal-body {
-  background-color: white;
-  margin: 10px;
-  color: #000000;
-  border-radius: 10px;
-  margin: 1.75rem auto;
-  max-width: 700px;
-}
-
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-button {
+.modal-content {
+  background: white;
+  padding: 20px;
+  width: 400px;
   border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+}
+
+.filters {
+  margin-bottom: 20px;
+}
+
+.filters select {
+  margin-right: 10px;
+  padding: 5px;
+}
+
+.reservas-container {
+  display: grid;
+  gap: 20px;
+  padding: 20px;
+}
+
+.reserva-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.reserva-card h3 {
+  margin: 0 0 10px;
+}
+
+.remove-btn {
+  background: #d9534f;
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: border-color 0.25s;
 }
 
-button:hover {
-  border-color: #646cff;
+.remove-btn:hover {
+  background: #c9302c;
 }
 
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-.confirmar {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 1rem;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-
-  a:hover {
-    color: #747bff;
-  }
-
-  button {
-    background-color: #f9f9f9;
-  }
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--color-primary);
+  color: white;
+  text-align: center;
+  padding: 8px;
 }
