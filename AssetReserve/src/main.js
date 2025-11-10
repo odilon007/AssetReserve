@@ -1,7 +1,8 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
 import ativos from './js/data.js'
 
-// CARDS
+// ===============================
+// 1️⃣ GERAÇÃO DOS CARDS
+// ===============================
 
 function ativocard(ativo) {
   return `
@@ -12,22 +13,25 @@ function ativocard(ativo) {
           <h5 class="card-title">${ativo.title}</h5>
           <p class="card-text text-muted">${ativo.descricao}</p>
           <p class="card-text text-muted">Categoria: ${ativo.tipo}</p>
-          <button class="btn open-modal btn-primary btn-reservar" data-id="1">Reservar</button>
+          <button class="btn open-modal btn-primary btn-reservar" data-id="${ativo.id}">Reservar</button>
         </div> 
       </div> 
     </div>
   `;
 }
-const allcards = ativos.map( (ativo) => ativocard(ativo));
 
 const main = document.querySelector('main');
-main.innerHTML = allcards.join('');
+if (main) {
+  const allcards = ativos.map((ativo) => ativocard(ativo));
+  main.innerHTML = allcards.join('');
+}
 
-//  MODAL
+// ===============================
+// 2️⃣ MODAL DE RESERVA
+// ===============================
 
 const modal = document.getElementById("meuModal");
-const botoesAbrir = document.querySelectorAll(".open-modal");
-const btnFechar = document.getElementById("btnFechar")
+const btnFechar = document.getElementById("btnFechar");
 
 function abrirModal() {
   modal.classList.add("open");
@@ -39,40 +43,92 @@ function fecharModal() {
   document.body.style.overflow = "";
 }
 
-botoesAbrir.forEach(btn => {
-  btn.addEventListener("click", abrirModal);
-});
+// Delegação de evento — funciona mesmo para elementos criados dinamicamente
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("open-modal")) {
+    abrirModal();
+  }
 
-btnFechar.addEventListener("click", fecharModal);
+  if (e.target.id === "btnFechar") {
+    e.preventDefault();
+    fecharModal();
+  }
 
-modal.addEventListener("click", (e) => {
-  if (e.target == modal) {
+  if (e.target === modal) {
     fecharModal();
   }
 });
 
-//  FILTRAR CARDS PELO SELETOR
+// ===============================
+// 3️⃣ FILTROS DE CATEGORIA E CAPACIDADE
+// ===============================
 
-document.getElementById('filter-category').addEventListener('change', function() {
-  const category = this.value;
-  const capacity = document.getElementById('filter-capacity').value;
-  const cards = document.querySelectorAll(".card")
+const filterCategory = document.getElementById('filter-category');
+const filterCapacity = document.getElementById('filter-capacity');
+
+function filtrarCards() {
+  const category = filterCategory ? filterCategory.value : '';
+  const capacity = filterCapacity ? filterCapacity.value : '';
+  const cards = document.querySelectorAll(".card");
 
   cards.forEach(card => {
     const cardCategory = card.getAttribute('data-category');
     const cardCapacity = card.getAttribute('data-capacity');
 
-    // VERIFICA SE O CARD CORRESPONDE A SELECIONADA
-    console.log('Categoria selecionada:', category);
-    console.log('Capacidade selecionada:', capacity);
-    console.log('Card Categoria:', cardCategory);
-    console.log('Card Capacidade:', cardCapacity)
     const matchesCategory = (category === '' || cardCategory === category);
     const matchesCapacity = (capacity === '' || cardCapacity === capacity);
-    if (matchesCategory && matchesCapacity) {
-      card.style.display = "block";
+
+    card.style.display = (matchesCategory && matchesCapacity) ? "block" : "none";
+  });
+}
+
+if (filterCategory) filterCategory.addEventListener('change', filtrarCards);
+if (filterCapacity) filterCapacity.addEventListener('change', filtrarCards);
+
+// ===============================
+// 4️⃣ LOGIN / LOGOUT
+// ===============================
+
+// PÁGINA DE LOGIN
+if (window.location.pathname.includes("login.html")) {
+  const loginForm = document.getElementById("loginForm");
+
+  if (loginForm) {
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      const senha = document.getElementById("senha").value;
+
+      // Exemplo simples de autenticação
+      if (email === "admin@teste.com" && senha === "1234") {
+        localStorage.setItem("logado", "true");
+        window.location.href = "index.html";
+      } else {
+        alert("E-mail ou senha incorretos!");
+      }
+    });
+  }
+}
+
+// PÁGINA PRINCIPAL
+if (window.location.pathname.includes("index.html") || window.location.pathname === "/") {
+  const authButtons = document.getElementById("auth-buttons");
+
+  if (authButtons) {
+    if (localStorage.getItem("logado") === "true") {
+      authButtons.innerHTML = `
+        <button id="logout" class="btn btn-danger">Sair</button>
+      `;
+      document.getElementById("logout").addEventListener("click", () => {
+        localStorage.removeItem("logado");
+        window.location.href = "login.html";
+      });
     } else {
-      card.style.display = 'none';
+      authButtons.innerHTML = `
+        <a href="login.html" class="btn btn-light">Login</a>
+      `;
     }
-  })
-})
+  }
+}
+
+console.log("✅ main.js carregado com sucesso!");
