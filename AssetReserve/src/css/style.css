@@ -126,6 +126,15 @@ header {
   background: rgba(0, 0, 0, 0.5);
   justify-content: center;
   align-items: center;
+  z-index: 1000;
+
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.modal.show {
+  display: flex;
+  opacity: 1;
 }
 
 .modal-content {
@@ -133,7 +142,17 @@ header {
   padding: 20px;
   width: 400px;
   border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+
+  transform: scale(0.95);
+  transition: transform 0.3s ease;
 }
+
+.modal.show .modal-content {
+  transform: scale(1);
+}
+
+
 
 .filters {
   margin-bottom: 20px;

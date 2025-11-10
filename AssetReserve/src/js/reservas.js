@@ -31,7 +31,7 @@ function renderReservas() {
                     const i = e.target.dataset.index;
                     const reserva = reservas[i];
 
-                    // 🧩 Confirmação antes de remover
+                    // Confirmação antes de remover
                     const confirmar = confirm(`Tem certeza que deseja remover a reserva de "${reserva.ativo}" no dia ${reserva.data} às ${reserva.hora}?`);
 
                     if (confirmar) {

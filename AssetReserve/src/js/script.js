@@ -15,7 +15,7 @@ dateInput.min = today;
 const categoryFilter = document.getElementById('categoryFilter');
 const capacityFilter = document.getElementById('capacityFilter');
 
-// === Funções auxiliares de LocalStorage === //
+// Funções auxiliares de LocalStorage
 function getReservations() {
   return JSON.parse(localStorage.getItem('reservas')) || [];
 }
@@ -31,7 +31,7 @@ function isReserved(title, date, time) {
   return reservas.some(r => r.title === title && r.date === date && r.time === time);
 }
 
-// === Renderiza os cards === //
+// Renderiza os cards
 export function renderAssets(data = assets) {
   gallery.innerHTML = data.map(asset => `
     <div class="asset" data-category="${asset.category}">
@@ -48,19 +48,47 @@ export function renderAssets(data = assets) {
 }
 
 
-// === Modal === //
+// Modal
 function openModal(assetTitle) {
   const asset = assets.find(a => a.title === assetTitle);
   if (!asset) return;
+
   modalTitle.textContent = asset.title;
   modalImage.src = asset.image;
   modalDetails.textContent = `Capacidade: ${asset.details.capacity}\nConexões: ${asset.details.connections}`;
+
+  // mostra o modal
   modal.style.display = 'flex';
+
+  // força o navegador a renderizar antes de aplicar o fade
+  requestAnimationFrame(() => {
+    modal.classList.add('show');
+  });
 }
 
-closeModal.addEventListener('click', () => modal.style.display = 'none');
+function hideModal() {
+  modal.classList.remove('show');
 
-// === Reserva === //
+  const handleTransitionEnd = (e) => {
+    if (e.propertyName === 'opacity') {
+      modal.style.display = 'none';
+      modal.removeEventListener('transitionend', handleTransitionEnd);
+    }
+  };
+
+  modal.addEventListener('transitionend', handleTransitionEnd);
+}
+
+// fecha ao clicar no X
+closeModal.addEventListener('click', hideModal);
+
+// fecha ao clicar fora do conteúdo
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) hideModal();
+});
+
+
+// Reserva
 reservationForm.addEventListener('submit', e => {
   e.preventDefault();
 
@@ -80,7 +108,7 @@ reservationForm.addEventListener('submit', e => {
 });
 
 
-// === Filtros === //
+// Filtros
 function filterAssets() {
   const category = categoryFilter.value;
   const capacity = capacityFilter.value;
