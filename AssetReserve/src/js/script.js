@@ -37,9 +37,7 @@ export function renderAssets(data = assets) {
     <div class="asset" data-category="${asset.category}">
       <img src="${asset.image}" alt="${asset.title}">
       <h3>${asset.title}</h3>
-
-      ${asset.capacity ? `<p>Capacidade: ${asset.capacity} pessoas</p>` : ''}
-
+      
       <p class="status ${asset.available ? '' : 'unavailable'}">
         ${asset.available ? 'Disponível' : 'Indisponível'}
       </p>
@@ -96,15 +94,27 @@ reservationForm.addEventListener('submit', e => {
   const data = document.getElementById('date').value;
   const hora = document.getElementById('time').value;
 
+  // pega o objeto do ativo completo
+  const asset = assets.find(a => a.title === ativo);
+
   if (isReserved(ativo, data, hora)) {
     alert('Este ativo já está reservado para esse horário!');
     return;
   }
 
-  const reserva = { ativo, data, hora };
+  
+  const reserva = {
+    ativo,
+    descricao: asset.details?.connections || "Sem descrição",
+    capacidade: asset.details?.capacity || "Não informado",
+    data,
+    hora
+  };
+
   saveReservation(reserva);
-  alert(`✅ Reserva confirmada para ${ativo} em ${data} às ${hora}!`);
+  alert(`Reserva confirmada para ${ativo} em ${data} às ${hora}!`);
   modal.style.display = 'none';
+
 });
 
 
