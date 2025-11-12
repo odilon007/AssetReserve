@@ -4,14 +4,14 @@ export const ativos = [
     categoria: 'Sala',
     capacidade: 'média',
     disponivel: true,
-    imagem: "public/imgs/Sala-media-capacidade.jpeg",
+    imagem: "imgs/Sala-media-capacidade.jpeg",
     detalhes: { capacidade: '10 pessoas', conexoes: 'Wi-Fi, HDMI' }
   },
   {
     titulo: 'Projetor',
     categoria: 'Equipamento',
     disponivel: true,
-    imagem: "public/imgs/projetor.jpeg",
+    imagem: "imgs/projetor.jpeg", 
     detalhes: { capacidade: 'N/A', conexoes: 'HDMI, USB' }
   },
   {
@@ -19,14 +19,14 @@ export const ativos = [
     categoria: 'Sala',
     capacidade: 'alta',
     disponivel: true,
-    imagem: "public/imgs/Sala-alta-capacidade.jpeg",
+    imagem: "imgs/Sala-alta-capacidade.jpeg", 
     detalhes: { capacidade: '20 pessoas', conexoes: 'Wi-Fi, VGA' }
   },
   {
     titulo: 'Câmera',
     categoria: 'Equipamento',
     disponivel: true,
-    imagem: "public/imgs/camera.jpeg",
+    imagem: "imgs/camera.jpeg", 
     detalhes: { capacidade: 'N/A', conexoes: 'USB, Bluetooth' }
   }
 ];
