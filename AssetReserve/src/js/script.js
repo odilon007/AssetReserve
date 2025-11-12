@@ -1,139 +1,120 @@
-import { assets } from './data.js';
+import { ativos } from './data.js';
 
-const gallery = document.getElementById('gallery');
+const galeria = document.getElementById('galeria');
 const modal = document.getElementById('modal');
-const modalTitle = document.getElementById('modalTitle');
-const modalImage = document.getElementById('modalImage');
-const modalDetails = document.getElementById('modalDetails');
-const closeModal = document.getElementById('closeModal');
-const reservationForm = document.getElementById('reservationForm');
+const modalTitulo = document.getElementById('modalTitulo');
+const modalImg = document.getElementById('modalImagem');
+const modalDetalhes = document.getElementById('modalDetalhes');
+const fecharModalBtn = document.getElementById('fecharModalBtn');
+const formularioReserva = document.getElementById('formularioReserva');
+
 // Define automaticamente a data atual no campo de data
-const dateInput = document.getElementById('date');
-const today = new Date().toISOString().split('T')[0];
-dateInput.value = today;
-dateInput.min = today;
-const categoryFilter = document.getElementById('categoryFilter');
-const capacityFilter = document.getElementById('capacityFilter');
+const campoData = document.getElementById('data');
+const hoje = new Date().toISOString().split('T')[0];
+campoData.value = hoje;
+campoData.min = hoje;
+
+const filtroCategoria = document.getElementById('filtroCategoria');
+const filtroCapacidade = document.getElementById('filtroCapacidade');
 
 // Funções auxiliares de LocalStorage
-function getReservations() {
+function obterReservas() {
   return JSON.parse(localStorage.getItem('reservas')) || [];
 }
 
-function saveReservation(reserva) {
-  const reservas = getReservations();
+function salvarReserva(reserva) {
+  const reservas = obterReservas();
   reservas.push(reserva);
   localStorage.setItem('reservas', JSON.stringify(reservas));
 }
 
-function isReserved(title, date, time) {
-  const reservas = getReservations();
-  return reservas.some(r => r.title === title && r.date === date && r.time === time);
+function existeReserva(titulo, data, hora) {
+  const reservas = obterReservas();
+  return reservas.some(r => r.titulo === titulo && r.data === data && r.hora === hora);
 }
 
 // Renderiza os cards
-export function renderAssets(data = assets) {
-  gallery.innerHTML = data.map(asset => `
-    <div class="asset" data-category="${asset.category}">
-      <img src="${asset.image}" alt="${asset.title}">
-      <h3>${asset.title}</h3>
+export function renderizarAtivos(data = ativos) {
+  galeria.innerHTML = data.map(ativo => `
+    <div class="ativo" data-categoria="${ativo.categoria}">
+      <img src="${ativo.imagem}" alt="${ativo.titulo}">
+      <h3>${ativo.titulo}</h3>
       
-      <p class="status ${asset.available ? '' : 'unavailable'}">
-        ${asset.available ? 'Disponível' : 'Indisponível'}
+      <p class="status ${ativo.disponivel ? '' : 'indisponivel'}">
+        ${ativo.disponivel ? 'Disponível' : 'Indisponível'}
       </p>
     </div>
   `).join('');
 }
 
-
 // Modal
-function openModal(assetTitle) {
-  const asset = assets.find(a => a.title === assetTitle);
-  if (!asset) return;
+function abrirModal(tituloAtivo) {
+  const ativo = ativos.find(a => a.titulo === tituloAtivo);
+  if (!ativo) return;
 
-  modalTitle.textContent = asset.title;
-  modalImage.src = asset.image;
-  modalDetails.textContent = `Capacidade: ${asset.details.capacity}\nConexões: ${asset.details.connections}`;
+  modalTitulo.textContent = ativo.titulo;
+  modalImg.src = ativo.imagem;
+  modalDetalhes.textContent = `Capacidade: ${ativo.detalhes.capacidade}\nConexões: ${ativo.detalhes.conexoes}`;
 
-  // mostra o modal
   modal.style.display = 'flex';
-
-  // força o navegador a renderizar antes de aplicar o fade
-  requestAnimationFrame(() => {
-    modal.classList.add('show');
-  });
 }
 
-function hideModal() {
-  modal.classList.remove('show');
-
-  const handleTransitionEnd = (e) => {
-    if (e.propertyName === 'opacity') {
-      modal.style.display = 'none';
-      modal.removeEventListener('transitionend', handleTransitionEnd);
-    }
-  };
-
-  modal.addEventListener('transitionend', handleTransitionEnd);
+function fecharModalInstantaneo() {
+  modal.style.display = 'none';
 }
 
 // fecha ao clicar no X
-closeModal.addEventListener('click', hideModal);
+fecharModalBtn.addEventListener('click', fecharModalInstantaneo);
 
 // fecha ao clicar fora do conteúdo
 modal.addEventListener('click', (e) => {
-  if (e.target === modal) hideModal();
+  if (e.target === modal) fecharModalInstantaneo();
 });
 
-
 // Reserva
-reservationForm.addEventListener('submit', e => {
+formularioReserva.addEventListener('submit', e => {
   e.preventDefault();
 
-  const ativo = modalTitle.textContent;
-  const data = document.getElementById('date').value;
-  const hora = document.getElementById('time').value;
+  const ativoTitulo = modalTitulo.textContent;
+  const data = document.getElementById('data').value;
+  const hora = document.getElementById('hora').value;
 
-  // pega o objeto do ativo completo
-  const asset = assets.find(a => a.title === ativo);
+  const ativo = ativos.find(a => a.titulo === ativoTitulo);
 
-  if (isReserved(ativo, data, hora)) {
+  if (existeReserva(ativoTitulo, data, hora)) {
     alert('Este ativo já está reservado para esse horário!');
     return;
   }
 
-  
   const reserva = {
-    ativo,
-    descricao: asset.details?.connections || "Sem descrição",
-    capacidade: asset.details?.capacity || "Não informado",
+    titulo: ativoTitulo,
+    descricao: ativo.detalhes?.conexoes || "Sem descrição",
+    capacidade: ativo.detalhes?.capacidade || "Não informado",
     data,
     hora
   };
 
-  saveReservation(reserva);
-  alert(`Reserva confirmada para ${ativo} em ${data} às ${hora}!`);
+  salvarReserva(reserva);
+  alert(`Reserva confirmada para ${ativoTitulo} em ${data} às ${hora}!`);
   modal.style.display = 'none';
-
 });
 
-
 // Filtros
-function filterAssets() {
-  const category = categoryFilter.value;
-  const capacity = capacityFilter.value;
+function filtrarAtivos() {
+  const categoria = filtroCategoria.value;
+  const capacidade = filtroCapacidade.value;
 
-  const filtered = assets.filter(a =>
-    (!category || a.category === category) &&
-    (!capacity || a.capacity === capacity)
+  const filtrados = ativos.filter(a =>
+    (!categoria || a.categoria === categoria) &&
+    (!capacidade || a.capacidade === capacidade)
   );
-  renderAssets(filtered);
+  renderizarAtivos(filtrados);
 }
 
-categoryFilter.addEventListener('change', filterAssets);
-capacityFilter.addEventListener('change', filterAssets);
+filtroCategoria.addEventListener('change', filtrarAtivos);
+filtroCapacidade.addEventListener('change', filtrarAtivos);
 
-gallery.addEventListener('click', e => {
-  const card = e.target.closest('.asset');
-  if (card) openModal(card.querySelector('h3').textContent);
+galeria.addEventListener('click', e => {
+  const card = e.target.closest('.ativo');
+  if (card) abrirModal(card.querySelector('h3').textContent);
 });

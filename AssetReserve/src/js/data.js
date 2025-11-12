@@ -1,34 +1,32 @@
-export const assets = [
+export const ativos = [
   {
-    title: 'Sala A',
-    category: 'Sala',
-    capacity: 'média',
-    available: true,
-    image: "public/imgs/Sala-media-capacidade.jpeg",
-    details: { capacity: '10 pessoas', connections: 'Wi-Fi, HDMI' }
+    titulo: 'Sala A',
+    categoria: 'Sala',
+    capacidade: 'média',
+    disponivel: true,
+    imagem: "public/imgs/Sala-media-capacidade.jpeg",
+    detalhes: { capacidade: '10 pessoas', conexoes: 'Wi-Fi, HDMI' }
   },
   {
-    title: 'Projetor',
-    category: 'Equipamento',
-    available: true,
-    image: "public/imgs/projetor.jpeg",
-    details: { capacity: 'N/A', connections: 'HDMI, USB' }
+    titulo: 'Projetor',
+    categoria: 'Equipamento',
+    disponivel: true,
+    imagem: "public/imgs/projetor.jpeg",
+    detalhes: { capacidade: 'N/A', conexoes: 'HDMI, USB' }
   },
   {
-    title: 'Sala B',
-    category: 'Sala',
-    capacity: 'alta',
-    available: true,
-    image: "public/imgs/Sala-alta-capacidade.jpeg",
-    details: { capacity: '20 pessoas', connections: 'Wi-Fi, VGA' }
+    titulo: 'Sala B',
+    categoria: 'Sala',
+    capacidade: 'alta',
+    disponivel: true,
+    imagem: "public/imgs/Sala-alta-capacidade.jpeg",
+    detalhes: { capacidade: '20 pessoas', conexoes: 'Wi-Fi, VGA' }
   },
   {
-    title: 'Câmera',
-    category: 'Equipamento',
-    available: true,
-    image: "public/imgs/camera.jpeg",
-    details: { capacity: 'N/A', connections: 'USB, Bluetooth' }
+    titulo: 'Câmera',
+    categoria: 'Equipamento',
+    disponivel: true,
+    imagem: "public/imgs/camera.jpeg",
+    detalhes: { capacidade: 'N/A', conexoes: 'USB, Bluetooth' }
   }
 ];
-
-

@@ -1,21 +1,24 @@
+import '../css/style.css';
+
+
 // Recupera as reservas do LocalStorage
 const reservas = JSON.parse(localStorage.getItem('reservas')) || [];
-const reservasList = document.getElementById('reservasList');
+const listaReservas = document.getElementById('listaReservas');
 
-function renderReservas() {
-  reservasList.innerHTML = ''; // Limpa o conteúdo anterior
+function renderizarReservas() {
+  listaReservas.innerHTML = ''; // Limpa o conteúdo anterior
 
   if (reservas.length === 0) {
-    reservasList.innerHTML = '<p>Nenhuma reserva encontrada.</p>';
+    listaReservas.innerHTML = '<p>Nenhuma reserva encontrada.</p>';
     return;
   }
 
   // Cria a tabela
-  const table = document.createElement('table');
-  table.classList.add('tabela-reservas');
+  const tabela = document.createElement('table');
+  tabela.classList.add('tabela-reservas');
 
   // Cabeçalho da tabela
-  table.innerHTML = `
+  tabela.innerHTML = `
     <thead>
       <tr>
         <th>Ativo</th>
@@ -29,41 +32,41 @@ function renderReservas() {
   `;
 
   // Corpo da tabela
-  const tbody = document.createElement('tbody');
+  const corpo = document.createElement('tbody');
 
   reservas.forEach((reserva, index) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${reserva.ativo || '-'}</td>
+    const linha = document.createElement('tr');
+    linha.innerHTML = `
+      <td>${reserva.titulo || '-'}</td>
       <td>${reserva.descricao || '-'}</td>
       <td>${reserva.capacidade || '-'}</td>
       <td>${reserva.data || '-'}</td>
       <td>${reserva.hora || '-'}</td>
       <td>
-        <button class="remove-btn" data-index="${index}">Remover</button>
+        <button class="botao-remover" data-index="${index}">Remover</button>
       </td>
     `;
-    tbody.appendChild(tr);
+    corpo.appendChild(linha);
   });
 
-  table.appendChild(tbody);
-  reservasList.appendChild(table);
+  tabela.appendChild(corpo);
+  listaReservas.appendChild(tabela);
 
   // Função de remover reserva
-  document.querySelectorAll('.remove-btn').forEach(btn => {
-    btn.addEventListener('click', e => {
-      const i = e.target.dataset.index;
-      const reserva = reservas[i];
-      const confirmar = confirm(`Deseja realmente remover a reserva de "${reserva.ativo}" (${reserva.data} às ${reserva.hora})?`);
+  document.querySelectorAll('.botao-remover').forEach(botao => {
+    botao.addEventListener('click', e => {
+      const indice = e.target.dataset.index;
+      const reserva = reservas[indice];
+      const confirmar = confirm(`Deseja realmente remover a reserva de "${reserva.titulo}" (${reserva.data} às ${reserva.hora})?`);
 
       if (confirmar) {
-        reservas.splice(i, 1);
+        reservas.splice(indice, 1);
         localStorage.setItem('reservas', JSON.stringify(reservas));
-        renderReservas(); // Atualiza a tabela
+        renderizarReservas(); // Atualiza a tabela
       }
     });
   });
 }
 
 // Renderiza na tela
-renderReservas();
+renderizarReservas();
