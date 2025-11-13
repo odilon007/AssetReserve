@@ -34,29 +34,28 @@ const modal = document.getElementById("meuModal");
 const btnFechar = document.getElementById("btnFechar");
 
 function abrirModal() {
-  modal.classList.add("open");
-  document.body.style.overflow = "hidden";
+  if (modal) {
+    modal.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
 }
 
 function fecharModal() {
-  modal.classList.remove("open");
-  document.body.style.overflow = "";
+  if (modal) {
+    modal.classList.remove("open");
+    document.body.style.overflow = "";
+  }
 }
 
-// Delegação de evento — funciona mesmo para elementos criados dinamicamente
 document.addEventListener("click", (e) => {
-  if (e.target.classList.contains("open-modal")) {
-    abrirModal();
-  }
+  if (e.target.classList.contains("open-modal")) abrirModal();
 
   if (e.target.id === "btnFechar") {
     e.preventDefault();
     fecharModal();
   }
 
-  if (e.target === modal) {
-    fecharModal();
-  }
+  if (e.target === modal) fecharModal();
 });
 
 // ===============================
@@ -74,10 +73,8 @@ function filtrarCards() {
   cards.forEach(card => {
     const cardCategory = card.getAttribute('data-category');
     const cardCapacity = card.getAttribute('data-capacity');
-
     const matchesCategory = (category === '' || cardCategory === category);
     const matchesCapacity = (capacity === '' || cardCapacity === capacity);
-
     card.style.display = (matchesCategory && matchesCapacity) ? "block" : "none";
   });
 }
@@ -86,49 +83,73 @@ if (filterCategory) filterCategory.addEventListener('change', filtrarCards);
 if (filterCapacity) filterCapacity.addEventListener('change', filtrarCards);
 
 // ===============================
-// 4️⃣ LOGIN / LOGOUT
+// 4️⃣ LOGIN
 // ===============================
 
-// PÁGINA DE LOGIN
 if (window.location.pathname.includes("login.html")) {
-  const loginForm = document.getElementById("loginForm");
+  const loginForm = document.querySelector(".form-box.login form");
 
   if (loginForm) {
     loginForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      const email = document.getElementById("email").value;
-      const senha = document.getElementById("senha").value;
+      const username = loginForm.querySelector("input[type='text']").value;
+      const password = loginForm.querySelector("input[type='password']").value;
 
-      // Exemplo simples de autenticação
-      if (email === "admin@teste.com" && senha === "1234") {
+      // Simulação simples de login (poderia ser substituída por API)
+      const userData = JSON.parse(localStorage.getItem("userData"));
+
+      if (userData && username === userData.username && password === userData.password) {
         localStorage.setItem("logado", "true");
+        alert("Login realizado com sucesso!");
         window.location.href = "index.html";
       } else {
-        alert("E-mail ou senha incorretos!");
+        alert("Usuário ou senha incorretos!");
       }
     });
   }
 }
 
-// PÁGINA PRINCIPAL
+// ===============================
+// 5️⃣ CADASTRO (REGISTER)
+// ===============================
+
+if (window.location.pathname.includes("register.html") || window.location.pathname.includes("cadastro")) {
+  const registerForm = document.querySelector(".form-box.register form");
+
+  if (registerForm) {
+    registerForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const username = registerForm.querySelector("input[placeholder='username']").value;
+      const email = registerForm.querySelector("input[placeholder='email']").value;
+      const password = registerForm.querySelector("input[placeholder='password']").value;
+
+      const userData = { username, email, password };
+      localStorage.setItem("userData", JSON.stringify(userData));
+      alert("Cadastro realizado com sucesso! Faça login para continuar.");
+      window.location.href = "login.html";
+    });
+  }
+}
+
+// ===============================
+// 6️⃣ LOGOUT
+// ===============================
+
 if (window.location.pathname.includes("index.html") || window.location.pathname === "/") {
   const authButtons = document.getElementById("auth-buttons");
 
   if (authButtons) {
     if (localStorage.getItem("logado") === "true") {
-      authButtons.innerHTML = `
-        <button id="logout" class="btn btn-danger">Sair</button>
-      `;
+      authButtons.innerHTML = `<button id="logout" class="btn btn-danger">Sair</button>`;
       document.getElementById("logout").addEventListener("click", () => {
         localStorage.removeItem("logado");
         window.location.href = "login.html";
       });
     } else {
-      authButtons.innerHTML = `
-        <a href="login.html" class="btn btn-light">Login</a>
-      `;
+      authButtons.innerHTML = `<a href="login.html" class="btn btn-light">Login</a>`;
     }
   }
 }
 
 console.log("✅ main.js carregado com sucesso!");
+
