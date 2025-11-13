@@ -228,7 +228,6 @@ header {
   margin-top: 1rem;
   background-color: var(--color-white);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  display: block;
   border-radius: 8px;
   overflow: hidden;
 }

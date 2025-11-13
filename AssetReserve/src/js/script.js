@@ -6,14 +6,13 @@ const modalTitulo = document.getElementById('modalTitulo');
 const modalImg = document.getElementById('modalImagem');
 const modalDetalhes = document.getElementById('modalDetalhes');
 const fecharModalBtn = document.getElementById('fecharModalBtn');
-const formularioReserva = document.getElementById('formularioReserva');
+// const formularioReserva = document.getElementById('formularioReserva');
 const linkCalendario = document.getElementById('btn-ir-calendario');
-
 const filtroCategoria = document.getElementById('filtroCategoria');
 const filtroCapacidade = document.getElementById('filtroCapacidade');
 
 // Funções auxiliares de LocalStorage
-function obterReservas() {
+/*function obterReservas() {
   return JSON.parse(localStorage.getItem('reservas')) || [];
 }
 
@@ -26,7 +25,7 @@ function salvarReserva(reserva) {
 function existeReserva(titulo) {
   const reservas = obterReservas();
   return reservas.some(r => r.titulo === titulo);
-}
+}*/
 
 // Renderiza os cards
 export function renderizarAtivos(data = ativos) {
@@ -72,7 +71,7 @@ modal.addEventListener('click', (e) => {
 });
 
 // Reserva
-formularioReserva.addEventListener('submit', e => {
+/*formularioReserva.addEventListener('submit', e => {
   e.preventDefault();
 
   const ativoTitulo = modalTitulo.textContent;
@@ -92,7 +91,7 @@ formularioReserva.addEventListener('submit', e => {
   salvarReserva(reserva);
   alert(`Reserva confirmada para ${ativoTitulo}!`);
   modal.style.display = 'none';
-});
+});*/
 
 // Filtros
 function filtrarAtivos() {
