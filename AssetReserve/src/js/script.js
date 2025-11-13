@@ -6,19 +6,13 @@ const modalTitulo = document.getElementById('modalTitulo');
 const modalImg = document.getElementById('modalImagem');
 const modalDetalhes = document.getElementById('modalDetalhes');
 const fecharModalBtn = document.getElementById('fecharModalBtn');
-const formularioReserva = document.getElementById('formularioReserva');
-
-// Define automaticamente a data atual no campo de data
-const campoData = document.getElementById('data');
-const hoje = new Date().toISOString().split('T')[0];
-campoData.value = hoje;
-campoData.min = hoje;
-
+// const formularioReserva = document.getElementById('formularioReserva');
+const linkCalendario = document.getElementById('btn-ir-calendario');
 const filtroCategoria = document.getElementById('filtroCategoria');
 const filtroCapacidade = document.getElementById('filtroCapacidade');
 
 // Funções auxiliares de LocalStorage
-function obterReservas() {
+/*function obterReservas() {
   return JSON.parse(localStorage.getItem('reservas')) || [];
 }
 
@@ -28,10 +22,10 @@ function salvarReserva(reserva) {
   localStorage.setItem('reservas', JSON.stringify(reservas));
 }
 
-function existeReserva(titulo, data, hora) {
+function existeReserva(titulo) {
   const reservas = obterReservas();
-  return reservas.some(r => r.titulo === titulo && r.data === data && r.hora === hora);
-}
+  return reservas.some(r => r.titulo === titulo);
+}*/
 
 // Renderiza os cards
 export function renderizarAtivos(data = ativos) {
@@ -39,10 +33,6 @@ export function renderizarAtivos(data = ativos) {
     <div class="ativo" data-categoria="${ativo.categoria}">
       <img src="${ativo.imagem}" alt="${ativo.titulo}">
       <h3>${ativo.titulo}</h3>
-      
-      <p class="status ${ativo.disponivel ? '' : 'indisponivel'}">
-        ${ativo.disponivel ? 'Disponível' : 'Indisponível'}
-      </p>
     </div>
   `).join('');
 }
@@ -54,7 +44,16 @@ function abrirModal(tituloAtivo) {
 
   modalTitulo.textContent = ativo.titulo;
   modalImg.src = ativo.imagem;
-  modalDetalhes.textContent = `Capacidade: ${ativo.detalhes.capacidade}\nConexões: ${ativo.detalhes.conexoes}`;
+  // Formata os detalhes para exibição
+  modalDetalhes.innerHTML = `
+    <strong>Capacidade:</strong> ${ativo.detalhes.capacidade}<br>
+    <strong>Conexões:</strong> ${ativo.detalhes.conexoes}
+  `;
+
+  // --- A PARTE MAIS IMPORTANTE ---
+  // Configura o link do botão para a página de calendário específica deste ativo
+  // Garante que o nome do ativo (ex: "Sala A") seja passado corretamente na URL
+  linkCalendario.href = `ativo-calendario.html?ativo=${encodeURIComponent(ativo.titulo)}`;
 
   modal.style.display = 'flex';
 }
@@ -72,32 +71,27 @@ modal.addEventListener('click', (e) => {
 });
 
 // Reserva
-formularioReserva.addEventListener('submit', e => {
+/*formularioReserva.addEventListener('submit', e => {
   e.preventDefault();
 
   const ativoTitulo = modalTitulo.textContent;
-  const data = document.getElementById('data').value;
-  const hora = document.getElementById('hora').value;
-
   const ativo = ativos.find(a => a.titulo === ativoTitulo);
 
-  if (existeReserva(ativoTitulo, data, hora)) {
-    alert('Este ativo já está reservado para esse horário!');
+  if (existeReserva(ativoTitulo)) {
+    alert('Este ativo já foi reservado!');
     return;
   }
 
   const reserva = {
     titulo: ativoTitulo,
     descricao: ativo.detalhes?.conexoes || "Sem descrição",
-    capacidade: ativo.detalhes?.capacidade || "Não informado",
-    data,
-    hora
+    capacidade: ativo.detalhes?.capacidade || "Não informado"
   };
 
   salvarReserva(reserva);
-  alert(`Reserva confirmada para ${ativoTitulo} em ${data} às ${hora}!`);
+  alert(`Reserva confirmada para ${ativoTitulo}!`);
   modal.style.display = 'none';
-});
+});*/
 
 // Filtros
 function filtrarAtivos() {
