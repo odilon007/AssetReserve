@@ -1,5 +1,5 @@
 * {
-    margin : 0;
+    margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
@@ -14,14 +14,14 @@ body {
 }
 
 .form-box {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    backdrop-filter: blur(15px);
-    padding: 40px 50px;
     width: 100%;
     max-width: 400px;
+    padding: 40px 50px;
     color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(15px);
     box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s ease;
 }
@@ -38,34 +38,34 @@ h1 {
 }
 
 .input-box {
-    position: relative;
     margin-bottom: 20px;
+    position: relative;
 }
 
 .input-box input {
     width: 100%;
     padding: 12px 15px;
+    font-size: 1em;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.15);
     border: none;
     border-radius: 10px;
     outline: none;
-    background: rgba(255, 255, 255, 0.15);
-    color: #fff;
-    font-size: 1em;
     transition: background 0.3s ease;
 }
 
 .input-box input::placeholder {
-    color: rgba(255, 255, 255, 0.25)
+    color: rgba(255, 255, 255, 0.25);
 }
 
 .btn {
     width: 100%;
     padding: 12px;
-    background: #5b6ef5;
+    font-size: 1rem;
+    color: #fff;
     border: none;
     border-radius: 10px;
-    color:#fff;
-    font-size: 1rem;
+    background: #5b6ef5;
     cursor: pointer;
     transition: background 0.3s ease;
 }
@@ -75,25 +75,27 @@ h1 {
 }
 
 .login-link {
-    text-align: center;
     margin-top: 20px;
-    font-size: 0.9rem;
+    text-align: center;
 }
 
 .login-link a {
-    color: #5b6ef5;
+    display: block;
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: #ffffff;
     text-decoration: none;
-    font-weight: 500;
+    transition: color 0.2s ease;
 }
 
 .login-link a:hover {
-    text-decoration: underline;
+    color: #a0a0ff;
 }
 
 @media (max-width: 480px) {
     .form-box {
-        padding: 30px 25px;
         max-width: 90%;
+        padding: 30px 25px;
     }
 
     h1 {
@@ -105,4 +107,3 @@ h1 {
         font-size: 0.95rem;
     }
 }
-

@@ -1,22 +1,31 @@
-const ativos = [
+export const ativos = [
     {
-        id: 's1',
-        title: 'Sala de Reunião A',
-        tipo: 'sala',
-        descricao: 'Capacidade: 8 pessoas',
-        capacidade: 'medium',
-        image: './public/imgs/sala1.jpg',
-        
+    titulo: "Sala A",
+    categoria: "Sala",
+    capacidade: "média",
+    disponivel: true,
+    imagem: "imgs/Sala-media-capacidade.jpeg",
+    detalhes: { capacidade: "10 pessoas", conexoes: "Wi-Fi, HDMI" },
     },
     {
-        id: 'e1',
-        title: 'Projetor Epson',
-        tipo: 'equipamento',
-        descricao: 'Resolução: Full HD',
-        capacidade: 'small',
-        image: './public/imgs/projetor1.jpg',
+    titulo: "Projetor",
+    categoria: "Equipamento",
+    disponivel: true,
+    imagem: "imgs/projetor.jpeg",
+    detalhes: { capacidade: "N/A", conexoes: "HDMI, USB" },
     },
-];
-
-export default ativos;
-
+    {
+    titulo: "Sala B",
+    categoria: "Sala",
+    capacidade: "alta",
+    disponivel: true,
+    imagem: "imgs/Sala-alta-capacidade.jpeg",
+    detalhes: { capacidade: "20 pessoas", conexoes: "Wi-Fi, VGA" },
+    },
+    {
+    titulo: "Câmera",
+    categoria: "Equipamento",
+    disponivel: true,
+    imagem: "imgs/camera.jpeg",
+    detalhes: { capacidade: "N/A", conexoes: "USB, Bluetooth" },
+    }];
