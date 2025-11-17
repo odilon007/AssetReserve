@@ -8,7 +8,9 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         reservas: resolve(__dirname, 'reservas.html'),
-        calendario: resolve(__dirname, 'ativo-calendario.html')
+        calendario: resolve(__dirname, 'ativo-calendario.html'),
+        cadastro: resolve(__dirname, 'cadastro.html'),
+        login: resolve(__dirname, 'login.html')
       },
     },
   },
