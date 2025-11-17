@@ -15,27 +15,31 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Verificar se já existe usuário cadastrado
-        const usuarioExistente = JSON.parse(localStorage.getItem("usuario"));
+        // Pega usuários existentes (agora suporta vários)
+        const usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
 
-        if (usuarioExistente && usuarioExistente.email === email) {
+        // Verifica se o email já existe
+        const emailJaCadastrado = usuarios.some(user => user.email === email);
+
+        if (emailJaCadastrado) {
             alert("Este email já está cadastrado!");
             return;
         }
 
-        // Criar objeto do novo usuário
+        // Cria objeto do novo usuário
         const novoUsuario = {
             nome,
             email,
             senha
         };
 
-        // Salvar no localStorage
-        localStorage.setItem("usuario", JSON.stringify(novoUsuario));
+        // Salva no array de usuários
+        usuarios.push(novoUsuario);
+        localStorage.setItem("usuarios", JSON.stringify(usuarios));
 
         alert("Cadastro realizado com sucesso!");
 
-        // Redireciona para login
+        // Redireciona para o login
         window.location.href = "login.html";
     });
 });
