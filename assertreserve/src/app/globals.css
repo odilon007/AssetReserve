@@ -1,0 +1,29 @@
+@import 'tailwindcss';
+
+:root {
+  --color-primary: #0B2545;
+  --color-secondary: #134B70;
+  --color-accent: #8EB8E5;
+  --color-bg: #f9fafb;
+  --color-text: #1E1E1E;
+  --color-white: #FFFFFF;
+}
+
+h1 {
+  text-align: center;
+  color: var(--color-primary);
+  margin: 2rem 0;
+  font-size: 2.25rem;
+  font-weight: 800;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+a:hover {
+  opacity: 0.7; 
+}
+
