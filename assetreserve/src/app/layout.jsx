@@ -1,12 +1,12 @@
 import "./globals.css";
 
-import { Header } from '../componentes/header'
-import { Footer } from '../componentes/footer'
+import { Header } from '@/componentes/header/header'
+import { Footer } from '@/componentes/footer/footer'
 
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="pt-br">
       <body
         className={`antialiased`}
       >
