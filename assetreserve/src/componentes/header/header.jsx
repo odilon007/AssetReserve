@@ -10,7 +10,7 @@ export function Header() {
           <li><Link href="/"className="text-white transition duration-300 hover:opacity-70">Início</Link></li>
           <li><Link href="/reservas"className="text-white transition duration-300 hover:opacity-70">Reserva</Link></li>
           <li><Link href="/calendario"className="text-white transition duration-300 hover:opacity-70">Calendário</Link></li>
-          <li><Link href="/" className="text-white transition duration-300 hover:opacity-70">Fale conosco</Link></li>
+          <li><Link href="/contato" className="text-white transition duration-300 hover:opacity-70">Fale conosco</Link></li>
           <li><Link href="/cadastro" className="btn btn-outline">Cadastrar</Link></li>
           <li><Link href="/login" className="btn btn-solid">Login</Link></li>
         </ul>
