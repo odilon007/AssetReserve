@@ -96,4 +96,5 @@ const ativos = [
 },
 ];
 
+
 export default ativos;
