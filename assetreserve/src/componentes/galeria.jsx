@@ -36,7 +36,7 @@ function Galeria() {
                         <option value="">Todas</option>
                         <option value="baixa">Baixa</option>
                         <option value="média">Média</option>
-                        <option value="alta">Baixa</option>
+                        <option value="alta">Alta</option>
                     </select>
                 </div>
 
