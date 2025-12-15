@@ -1,7 +1,11 @@
 'use client'
 
-import ativos from "../data.js"
 import { useState } from 'react';
+import fetchAtivos from "../fetch"
+
+const ativos = await fetchAtivos()
+
+
 
 function Galeria() {
     const [filtroCategoria, setFiltroCategoria] = useState('');

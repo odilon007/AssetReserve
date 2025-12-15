@@ -1,14 +1,18 @@
-const supabaseUrl = '';
-const supabaseKey = '';
+console.log('URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+console.log('KEY:', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const tableName = 'ativos';  // O nome da sua tabela no Supabase
 
-async function fetchAtivos() {
+export default async function fetchAtivos() {
   const response = await fetch(`${supabaseUrl}/rest/v1/${tableName}`, {
     method: 'GET',  // Tipo da requisição
     headers: {
       'apikey': supabaseKey,  // Chave de autenticação
       'Authorization': `Bearer ${supabaseKey}`,  // Autorização do Bearer
       'Content-Type': 'application/json',  // Tipo de conteúdo
+      Accept: 'application/json',
     },
   });
 
@@ -21,4 +25,3 @@ async function fetchAtivos() {
   return data;
 }
 
-fetchAtivos();
