@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react';
-import fetchAtivos from "../fetch"
+import fetchAtivos from "../services/ativos"
 
 const ativos = await fetchAtivos()
 
