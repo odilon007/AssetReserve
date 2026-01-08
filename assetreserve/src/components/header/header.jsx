@@ -84,7 +84,7 @@ export function Header() {
             <button
               onClick={async () => {
                 await supabase.auth.signOut();
-                window.location.href = '/auth/login'
+                window.location.href = '/auth'
               }}
               className="ml-4 text-sm opacity-80 hover:opacity-100"
             >

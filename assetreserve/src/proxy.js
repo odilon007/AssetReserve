@@ -26,11 +26,10 @@ export default async function proxy(req) {
 
   const isProtectedRoute = pathname.startsWith('/site')
   const isAuthPage =
-    pathname === '/auth/login' ||
-    pathname === '/auth/cadastro'
+    pathname === '/auth'
 
   if (!user && isProtectedRoute) {
-    return NextResponse.redirect(new URL('/auth/login', req.url))
+    return NextResponse.redirect(new URL('/auth', req.url))
   }
 
   if (user && isAuthPage) {
@@ -43,7 +42,6 @@ export default async function proxy(req) {
 export const config = {
   matcher: [
     '/site/:path*',
-    '/auth/login',
-    '/auth/cadastro',
+    '/auth',
   ],
 }
