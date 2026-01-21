@@ -5,9 +5,8 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/lib/supabaseClient";
 
-/* =============================
-   REGEXPS (REQUISITO AVALIAÇÃO)
-============================= */
+//
+
 const REGEX_DATA_ISO = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 const REGEX_HORARIO = /^([01]\d|2[0-3]):00$/;
 const REGEX_TEXTO_SEGURO = /^[\w\sÀ-ÿ-]{1,50}$/;
@@ -15,7 +14,7 @@ const REGEX_TEXTO_SEGURO = /^[\w\sÀ-ÿ-]{1,50}$/;
 export default function CalendarioPage() {
   const searchParams = useSearchParams();
 
-  // 🔐 Sanitização do parâmetro via RegExp
+  // 
   const ativoTituloBruto = searchParams.get("ativo");
   const ativoTitulo = REGEX_TEXTO_SEGURO.test(ativoTituloBruto || "")
     ? ativoTituloBruto
@@ -26,21 +25,19 @@ export default function CalendarioPage() {
   const [diaSelecionadoISO, setDiaSelecionadoISO] = useState(null);
   const [horariosOcupados, setHorariosOcupados] = useState([]);
 
-  /* =============================
-     CONTROLE DE TEMPO LOCAL
-  ============================= */
+  //
+
   const agora = new Date();
   const horaAtual = agora.getHours();
 
-  // YYYY-MM-DD LOCAL (sem bug de fuso)
+  // YYYY-MM-DD LOCAL 
   const dataHojeLocal = agora.toLocaleDateString("sv-SE");
 
   const hojeMeiaNoite = new Date();
   hojeMeiaNoite.setHours(0, 0, 0, 0);
 
-  /* =============================
-     BUSCAR ATIVO
-  ============================= */
+  //
+
   useEffect(() => {
     async function buscarAtivo() {
       if (!ativoTitulo) return;
@@ -57,16 +54,15 @@ export default function CalendarioPage() {
     buscarAtivo();
   }, [ativoTitulo]);
 
-  /* =============================
-     BUSCAR AGENDAMENTOS DO DIA
-  ============================= */
+  // Busca agendamentos do dia
+
   useEffect(() => {
     async function buscarAgendamentos() {
       setHorariosOcupados([]);
 
       if (!diaSelecionadoISO || !ativoTitulo) return;
 
-      // ✅ RegExp de data
+      // 
       if (!REGEX_DATA_ISO.test(diaSelecionadoISO)) return;
 
       const { data, error } = await supabase
@@ -83,9 +79,8 @@ export default function CalendarioPage() {
     buscarAgendamentos();
   }, [diaSelecionadoISO, ativoTitulo]);
 
-  /* =============================
-     FUNÇÕES DO CALENDÁRIO
-  ============================= */
+  // Funções-calendario
+
   const meses = [
     "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
     "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
@@ -123,11 +118,11 @@ export default function CalendarioPage() {
     setDataCalendario(novaData);
   }
 
-  /* =============================
-     RESERVAR HORÁRIO
-  ============================= */
+
+  // Reservar hora
+
   async function reservar(hora) {
-    // ✅ RegExp de horário
+    // 
     if (!REGEX_HORARIO.test(hora)) {
       alert("Horário inválido ⛔");
       return;
@@ -139,7 +134,7 @@ export default function CalendarioPage() {
       return;
     }
 
-    const { error } = await supabase.from("agendamentos").insert([
+    const { error } = await supabase.from("reservas").insert([
       {
         ativo: ativoTitulo,
         data: diaSelecionadoISO,
@@ -161,7 +156,7 @@ export default function CalendarioPage() {
   return (
     <div className="max-w-6xl mx-auto p-6 flex flex-wrap gap-8">
 
-      {/* ATIVO */}
+      {/* ativo */}
       <section className="bg-white p-6 rounded-xl shadow w-full md:w-1/3 h-fit">
         <img src={ativo.imagem} className="rounded mb-4 w-full object-cover" />
         <h2 className="text-2xl font-bold text-[#0B2545]">{ativo.titulo}</h2>
@@ -172,7 +167,7 @@ export default function CalendarioPage() {
         </Link>
       </section>
 
-      {/* CALENDÁRIO */}
+      {/* caledario */}
       <section className="flex-1 space-y-6">
 
         <div className="bg-white p-6 rounded-xl shadow">
@@ -218,7 +213,7 @@ export default function CalendarioPage() {
           </div>
         </div>
 
-        {/* HORÁRIOS */}
+        {/* horario */}
         <div className="bg-white p-6 rounded-xl shadow">
           {!diaSelecionadoISO ? (
             <p className="text-center text-gray-500">Selecione um dia</p>

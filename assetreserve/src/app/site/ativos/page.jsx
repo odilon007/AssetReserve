@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import buscarAtivos from "@/services/ativos";
-import Galeria from "@/components/Galeria";
+import Galeria from "@/components/galeria";
 
 export default function AtivosPage() {
   const [ativos, setAtivos] = useState([]);
@@ -25,7 +25,7 @@ export default function AtivosPage() {
     carregarDados();
   }, []);
 
-  // 🔒 Trava o scroll do fundo quando o modal estiver aberto
+  // Trava o scroll do fundo quando o modal estiver aberto
   useEffect(() => {
     document.body.style.overflow = modalAberto ? "hidden" : "auto";
     return () => (document.body.style.overflow = "auto");
@@ -122,7 +122,7 @@ export default function AtivosPage() {
                           py-2.5 px-6 rounded-lg hover:bg-blue-900
                           transition-all shadow-md"
               >
-                📅 Ver Disponibilidade
+                 Ver Disponibilidade
               </Link>
             </div>
           </div>
