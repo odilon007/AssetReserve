@@ -57,11 +57,11 @@ export function Header() {
             </Link>
           </li>
 
-          <li>
+          {/*<li>
             <Link href="/site/calendario" className="text-white hover:opacity-70">
               Calendário
             </Link>
-          </li>
+          </li> */}
 
           <li>
             <Link href="/site/contato" className="text-white hover:opacity-70">

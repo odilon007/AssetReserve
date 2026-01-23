@@ -172,11 +172,13 @@ export default function CalendarioPage() {
 
         <div className="bg-white p-6 rounded-xl shadow">
           <div className="flex justify-between items-center mb-4">
-            <button onClick={() => mudarMes(-1)}>◀</button>
+            <button onClick={() => mudarMes(-1)} 
+            className="cursor-pointer font-bold hover:opacity-70">◀</button>
             <h2 className="font-bold">
               {meses[dataCalendario.getMonth()]} {dataCalendario.getFullYear()}
             </h2>
-            <button onClick={() => mudarMes(1)}>▶</button>
+            <button onClick={() => mudarMes(1)}
+              className="cursor-pointer hover:opacity-70">▶</button>
           </div>
 
           <div className="grid grid-cols-7 gap-2 text-center">
