@@ -133,15 +133,16 @@ export default function CalendarioPage() {
       alert("Esse horário já passou ⛔");
       return;
     }
-
+    const emailUsuario = 'teste@gmail.com'
     const { error } = await supabase.from("reservas").insert([
       {
         ativo: ativoTitulo,
         data: diaSelecionadoISO,
         horario: hora,
         usuario: "anonimo",
+        email: emailUsuario,
       },
-    ]);
+    ]).select().single();
 
     if (error) {
       alert("Erro ao reservar: " + error.message);
@@ -149,6 +150,15 @@ export default function CalendarioPage() {
       setHorariosOcupados((prev) => [...prev, hora]);
       alert("Reserva confirmada ✅");
     }
+    await fetch('/api/reserva/confirmar', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      reservaId: data.id,
+      email: 'usuario@email.com', // depois troca pelo real
+    }),
+    })
+
   }
 
   if (!ativo) return <p className="text-center mt-10">Carregando...</p>;
