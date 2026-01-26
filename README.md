@@ -19,13 +19,13 @@ O site exibe uma galeria de ativos disponíveis, permite ao usuário ver detalhe
 
 ## 🛠️Tecnologias Utilizadas
 
- **HTML5** - Estrutura do conteúdo da página.
+ **React + HTML5** - Estruturação do conteúdo da página com componentes reutilizáveis, semântica HTML5 e renderização eficiente da interface.
 
  **CSS3** - Estilização e design moderno (usando Flexbox, Grid e Media Queries).
 
  **JavaScript** - Interatividade — modais, filtros e calendário.
 
- **Vite** - Build tool para desenvolvimento rápido (com HMR e ES Modules).
+ **Next.js** - Framework React para aplicações web modernas, com SSR (Server-Side Rendering), SSG, rotas automáticas, SEO otimizado e Hot Reload integrado para desenvolvimento rápido.
 
  **Bootstrap** (opcional) - Facilita componentes e sistema de grid responsivo.
 
