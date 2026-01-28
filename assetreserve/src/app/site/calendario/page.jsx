@@ -1,253 +1,216 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/lib/supabaseClient";
 
-//
-
-const REGEX_DATA_ISO = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
-const REGEX_HORARIO = /^([01]\d|2[0-3]):00$/;
-const REGEX_TEXTO_SEGURO = /^[\w\sÀ-ÿ-]{1,50}$/;
+const REGEX_DATA = /^\d{4}-\d{2}-\d{2}$/;
+const REGEX_HORA = /^\d{2}:00$/;
 
 export default function CalendarioPage() {
-  const searchParams = useSearchParams();
+const searchParams = useSearchParams();
+const ativoTitulo = searchParams.get("ativo");
 
-  // 
-  const ativoTituloBruto = searchParams.get("ativo");
-  const ativoTitulo = REGEX_TEXTO_SEGURO.test(ativoTituloBruto || "")
-    ? ativoTituloBruto
-    : null;
+// Estados
+const [ativo, setAtivo] = useState(null);
+const [dataAtual, setDataAtual] = useState(new Date());
+const [diaSelecionado, setDiaSelecionado] = useState(null);
+const [horariosOcupados, setHorariosOcupados] = useState([]);
 
-  const [ativo, setAtivo] = useState(null);
-  const [dataCalendario, setDataCalendario] = useState(new Date());
-  const [diaSelecionadoISO, setDiaSelecionadoISO] = useState(null);
-  const [horariosOcupados, setHorariosOcupados] = useState([]);
+const hoje = new Date();
+const horaAtual = hoje.getHours();
+const hojeISO = hoje.toLocaleDateString("sv-SE");
 
-  //
+const hojeZero = new Date();
+hojeZero.setHours(0, 0, 0, 0);
 
-  const agora = new Date();
-  const horaAtual = agora.getHours();
+const meses = [
+  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+];
 
-  // YYYY-MM-DD LOCAL 
-  const dataHojeLocal = agora.toLocaleDateString("sv-SE");
+// Busca o ativo
+useEffect(() => {
+  async function carregarAtivo() {
+    if (!ativoTitulo) return;
 
-  const hojeMeiaNoite = new Date();
-  hojeMeiaNoite.setHours(0, 0, 0, 0);
+    const { data } = await supabase
+      .from("ativos")
+      .select("*")
+      .eq("titulo", ativoTitulo)
+      .single();
 
-  //
-
-  useEffect(() => {
-    async function buscarAtivo() {
-      if (!ativoTitulo) return;
-
-      const { data, error } = await supabase
-        .from("ativos")
-        .select("*")
-        .eq("titulo", ativoTitulo)
-        .single();
-
-      if (!error) setAtivo(data);
-    }
-
-    buscarAtivo();
-  }, [ativoTitulo]);
-
-  // Busca agendamentos do dia
-
-  useEffect(() => {
-    async function buscarAgendamentos() {
-      setHorariosOcupados([]);
-
-      if (!diaSelecionadoISO || !ativoTitulo) return;
-
-      // 
-      if (!REGEX_DATA_ISO.test(diaSelecionadoISO)) return;
-
-      const { data, error } = await supabase
-        .from("agendamentos")
-        .select("horario")
-        .eq("ativo", ativoTitulo)
-        .eq("data", diaSelecionadoISO);
-
-      if (!error && data) {
-        setHorariosOcupados(data.map((r) => r.horario));
-      }
-    }
-
-    buscarAgendamentos();
-  }, [diaSelecionadoISO, ativoTitulo]);
-
-  // Funções-calendario
-
-  const meses = [
-    "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
-    "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
-  ];
-
-  const diasSemana = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
-
-  function getDiasDoMes() {
-    const ano = dataCalendario.getFullYear();
-    const mes = dataCalendario.getMonth();
-    const primeiroDia = new Date(ano, mes, 1).getDay();
-    const ultimoDia = new Date(ano, mes + 1, 0).getDate();
-
-    const dias = [];
-    for (let i = 0; i < primeiroDia; i++) dias.push(null);
-    for (let d = 1; d <= ultimoDia; d++) dias.push(d);
-    return dias;
+    setAtivo(data);
   }
 
-  function selecionarDia(dia) {
-    const ano = dataCalendario.getFullYear();
-    const mes = String(dataCalendario.getMonth() + 1).padStart(2, "0");
-    const diaFmt = String(dia).padStart(2, "0");
+  carregarAtivo();
+}, [ativoTitulo]);
 
-    const iso = `${ano}-${mes}-${diaFmt}`;
+// Busca reservas do dia
+useEffect(() => {
+  if (!diaSelecionado) return;
 
-    if (REGEX_DATA_ISO.test(iso)) {
-      setDiaSelecionadoISO(iso);
+  async function carregarReservas() {
+    const { data } = await supabase
+      .from("reservas")
+      .select("horario")
+      .eq("ativo", ativoTitulo)
+      .eq("data", diaSelecionado);
+
+    if (data) {
+      setHorariosOcupados(data.map(r => r.horario));
     }
   }
 
-  function mudarMes(offset) {
-    const novaData = new Date(dataCalendario);
-    novaData.setMonth(dataCalendario.getMonth() + offset);
-    setDataCalendario(novaData);
+  carregarReservas();
+}, [diaSelecionado, ativoTitulo]);
+
+function diasDoMes() {
+  const ano = dataAtual.getFullYear();
+  const mes = dataAtual.getMonth();
+  const primeiroDia = new Date(ano, mes, 1).getDay();
+  const totalDias = new Date(ano, mes + 1, 0).getDate();
+
+  const dias = [];
+  for (let i = 0; i < primeiroDia; i++) dias.push(null);
+  for (let d = 1; d <= totalDias; d++) dias.push(d);
+
+  return dias;
+}
+
+function selecionarDia(dia) {
+  const ano = dataAtual.getFullYear();
+  const mes = String(dataAtual.getMonth() + 1).padStart(2, "0");
+  const diaFmt = String(dia).padStart(2, "0");
+  const dataString = `${ano}-${mes}-${diaFmt}`;
+
+  if (REGEX_DATA.test(dataString)) {
+    setDiaSelecionado(dataString);
+  }
+}
+
+function mudarMes(valor) {
+  const novaData = new Date(dataAtual);
+  novaData.setMonth(dataAtual.getMonth() + valor);
+  setDataAtual(novaData);
+}
+
+async function reservarHorario(hora) {
+  if (!REGEX_HORA.test(hora)) {
+    alert("Hora inválida");
+    return;
   }
 
+  const { error } = await supabase.from("reservas").insert({
+    ativo: ativoTitulo,
+    data: diaSelecionado,
+    horario: hora,
+    usuario: "Estudante",
+  });
 
-  // Reservar hora
-
-  async function reservar(hora) {
-    // 
-    if (!REGEX_HORARIO.test(hora)) {
-      alert("Horário inválido ⛔");
-      return;
-    }
-
-    // Bloqueia horário passado no dia atual
-    if (diaSelecionadoISO === dataHojeLocal && parseInt(hora) <= horaAtual) {
-      alert("Esse horário já passou ⛔");
-      return;
-    }
-
-    const { error } = await supabase.from("reservas").insert([
-      {
-        ativo: ativoTitulo,
-        data: diaSelecionadoISO,
-        horario: hora,
-        usuario: "anonimo",
-      },
-    ]);
-
-    if (error) {
-      alert("Erro ao reservar: " + error.message);
-    } else {
-      setHorariosOcupados((prev) => [...prev, hora]);
-      alert("Reserva confirmada ✅");
-    }
+  if (error) {
+    alert("Erro ao reservar");
+  } else {
+    setHorariosOcupados([...horariosOcupados, hora]);
+    alert("Reserva feita com sucesso");
   }
+}
 
-  if (!ativo) return <p className="text-center mt-10">Carregando...</p>;
+if (!ativo) return <p className="text-center mt-10">Carregando...</p>;
 
-  return (
-    <div className="max-w-6xl mx-auto p-6 flex flex-wrap gap-8">
+return (
+  <div className="max-w-6xl mx-auto p-6 flex gap-8 flex-wrap">
 
-      {/* ativo */}
-      <section className="bg-white p-6 rounded-xl shadow w-full md:w-1/3 h-fit">
-        <img src={ativo.imagem} className="rounded mb-4 w-full object-cover" />
-        <h2 className="text-2xl font-bold text-[#0B2545]">{ativo.titulo}</h2>
-        <p className="mt-2"><b>Categoria:</b> {ativo.categoria}</p>
-        <p><b>Capacidade:</b> {ativo.capacidade}</p>
-        <Link href="/site/ativos" className="text-blue-600 font-bold mt-4 block">
-          ← Escolher outro ativo
-        </Link>
-      </section>
+    {/* Info do ativo */}
+    <section className="bg-white p-6 rounded shadow w-full md:w-1/3">
+      <img
+        src={ativo.imagem}
+        className="rounded mb-4 w-full h-48 object-cover"
+        alt="Ativo"
+      />
+      <h2 className="text-xl font-bold">{ativo.titulo}</h2>
+      <p><b>Categoria:</b> {ativo.categoria}</p>
+      <p><b>Capacidade:</b> {ativo.capacidade}</p>
+      <Link href="/site/ativos" className="block mt-4 font-bold">
+        ← Voltar
+      </Link>
+    </section>
 
-      {/* caledario */}
-      <section className="flex-1 space-y-6">
+    {/* Calendário e horários */}
+    <section className="flex-1 space-y-6">
 
-        <div className="bg-white p-6 rounded-xl shadow">
-          <div className="flex justify-between items-center mb-4">
-            <button onClick={() => mudarMes(-1)} 
-            className="cursor-pointer font-bold hover:opacity-70">◀</button>
-            <h2 className="font-bold">
-              {meses[dataCalendario.getMonth()]} {dataCalendario.getFullYear()}
-            </h2>
-            <button onClick={() => mudarMes(1)}
-              className="cursor-pointer hover:opacity-70">▶</button>
-          </div>
+      <div className="bg-white p-6 rounded shadow">
+        <div className="flex justify-between mb-4">
+          <button onClick={() => mudarMes(-1)}>◀</button>
+          <h2 className="font-bold">
+            {meses[dataAtual.getMonth()]} {dataAtual.getFullYear()}
+          </h2>
+          <button onClick={() => mudarMes(1)}>▶</button>
+        </div>
 
-          <div className="grid grid-cols-7 gap-2 text-center">
-            {diasSemana.map(d => (
-              <div key={d} className="font-bold text-gray-400">{d}</div>
-            ))}
+        <div className="grid grid-cols-7 gap-2 text-center">
+          {diasDoMes().map((dia, i) => {
+            if (!dia) return <div key={i} />;
 
-            {getDiasDoMes().map((dia, i) => {
-              if (!dia) return <div key={i} />;
+            const dataDia = new Date(
+              dataAtual.getFullYear(),
+              dataAtual.getMonth(),
+              dia
+            );
 
-              const dataDoDia = new Date(
-                dataCalendario.getFullYear(),
-                dataCalendario.getMonth(),
-                dia
-              );
+            const passado = dataDia < hojeZero;
 
-              const ehPassado = dataDoDia < hojeMeiaNoite;
-              const iso =
-                `${dataCalendario.getFullYear()}-${String(dataCalendario.getMonth() + 1).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
+            const iso = `${dataAtual.getFullYear()}-${String(
+              dataAtual.getMonth() + 1
+            ).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
+
+            return (
+              <div
+                key={i}
+                onClick={() => !passado && selecionarDia(dia)}
+                className={`p-2 rounded cursor-pointer ${
+                  passado ? "opacity-30" : "hover:bg-blue-100"
+                } ${iso === diaSelecionado ? "bg-blue-500 text-white" : ""}`}
+              >
+                {dia}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="bg-white p-6 rounded shadow">
+        {!diaSelecionado ? (
+          <p className="text-center">Escolha um dia</p>
+        ) : (
+          <div className="grid grid-cols-4 gap-3">
+            {Array.from({ length: 11 }, (_, i) => i + 7).map((h) => {
+              const hora = `${String(h).padStart(2, "0")}:00`;
+              const reservado = horariosOcupados.includes(hora);
+              const passouHoje = diaSelecionado === hojeISO && h <= horaAtual;
+
+              const desabilitado = reservado || passouHoje;
 
               return (
-                <div
-                  key={i}
-                  onClick={() => !ehPassado && selecionarDia(dia)}
-                  className={`p-2 rounded cursor-pointer
-                    ${iso === diaSelecionadoISO ? "bg-[#0B2545] text-white" : "bg-gray-50"}
-                    ${ehPassado ? "opacity-30 cursor-not-allowed" : "hover:bg-blue-100"}
-                  `}
+                <button
+                  key={hora}
+                  disabled={desabilitado}
+                  onClick={() => reservarHorario(hora)}
+                  className={`py-2 rounded font-bold ${
+                    desabilitado
+                      ? "bg-gray-100 text-gray-300 line-through"
+                      : "bg-blue-200 hover:bg-blue-300"
+                  }`}
                 >
-                  {dia}
-                </div>
+                  {hora}
+                </button>
               );
             })}
           </div>
-        </div>
-
-        {/* horario */}
-        <div className="bg-white p-6 rounded-xl shadow">
-          {!diaSelecionadoISO ? (
-            <p className="text-center text-gray-500">Selecione um dia</p>
-          ) : (
-            <div className="grid grid-cols-4 gap-3">
-              {Array.from({ length: 11 }, (_, i) => i + 7).map(h => {
-                const hora = `${String(h).padStart(2, "0")}:00`;
-                const reservado = horariosOcupados.includes(hora);
-                const passouHoje =
-                  diaSelecionadoISO === dataHojeLocal && h <= horaAtual;
-
-                const desabilitado = reservado || passouHoje;
-
-                return (
-                  <button
-                    key={hora}
-                    disabled={desabilitado}
-                    onClick={() => reservar(hora)}
-                    className={`py-2 rounded font-bold
-                      ${desabilitado
-                        ? "bg-gray-200 text-gray-400 line-through"
-                        : "bg-blue-200 hover:bg-blue-300"}
-                    `}
-                  >
-                    {hora}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </section>
-    </div>
-  );
+        )}
+      </div>
+    </section>
+  </div>
+);
 }

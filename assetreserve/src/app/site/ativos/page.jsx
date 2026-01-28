@@ -13,116 +13,97 @@ export default function AtivosPage() {
 
   useEffect(() => {
     async function carregarDados() {
-      try {
-        const dados = await buscarAtivos();
-        setAtivos(dados || []);
-      } catch (error) {
-        console.error("Erro ao carregar dados:", error);
-      } finally {
-        setCarregando(false);
-      }
+      const dados = await buscarAtivos();
+      setAtivos(dados || []);
+      setCarregando(false);
     }
     carregarDados();
   }, []);
 
-  // Trava o scroll do fundo quando o modal estiver aberto
-  useEffect(() => {
-    document.body.style.overflow = modalAberto ? "hidden" : "auto";
-    return () => (document.body.style.overflow = "auto");
-  }, [modalAberto]);
-
-  const abrirModal = (ativo) => {
+  function abrirModal(ativo) {
     setAtivoSelecionado(ativo);
     setModalAberto(true);
-  };
+  }
 
-  const fecharModal = () => {
+  function fecharModal() {
     setModalAberto(false);
-    setAtivoSelecionado(null);
-  };
+  }
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold text-center mb-8 text-[#0B2545]">
-        Galeria de Ativos Disponíveis
-      </h1>
+    <div style={{ padding: "40px", maxWidth: "1200px", margin: "0 auto", backgroundColor: "var(--color-bg)" }}>
+      <h1>Galeria de Ativos Disponíveis</h1>
 
-      <div className="px-4">
-        {carregando ? (
-          <p className="text-center">Carregando...</p>
-        ) : (
-          <Galeria listaAtivos={ativos} aoClicar={abrirModal} />
-        )}
-      </div>
+      {carregando ? (
+        <p style={{ textAlign: "center" }}>Carregando...</p>
+      ) : (
+        <Galeria listaAtivos={ativos} aoClicar={abrirModal} />
+      )}
 
       {modalAberto && ativoSelecionado && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center
-                     bg-white/10 backdrop-blur-sm
-                     transition-opacity duration-300"
-          onClick={(e) => e.target === e.currentTarget && fecharModal()}
+        <div 
+          onClick={fecharModal}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0,0,0,0.7)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000
+          }}
         >
-          <div
-            className="bg-white p-6 rounded-2xl shadow-2xl
-                       w-full max-w-xl
-                       max-h-[75vh] overflow-y-auto
-                       mx-4 relative
-                       transform transition-all duration-300 ease-out
-                       animate-modal-in"
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: "var(--color-white)",
+              padding: "20px",
+              borderRadius: "10px",
+              width: "90%",
+              maxWidth: "500px",
+              position: "relative",
+              boxShadow: "0 10px 25px rgba(0,0,0,0.2)"
+            }}
           >
-            <button
+            <button 
               onClick={fecharModal}
-              className="absolute top-3 right-4 text-2xl font-bold
-                         text-gray-400 hover:text-red-500 transition"
+              style={{ position: "absolute", top: "10px", right: "15px", cursor: "pointer", border: "none", background: "none", fontSize: "20px" }}
             >
               &times;
             </button>
 
-            <h2 className="text-xl font-bold text-[#0B2545] mb-3 pr-8">
+            <h2 style={{ color: "var(--color-primary)", marginBottom: "15px" }}>
               {ativoSelecionado.titulo}
             </h2>
-
-            <img
-              src={ativoSelecionado.imagem}
-              alt={ativoSelecionado.titulo}
-              className="w-full h-44 object-cover rounded-lg mb-4 border"
+            
+            <img 
+              src={ativoSelecionado.imagem} 
+              style={{ width: "100%", height: "200px", objectFit: "cover", borderRadius: "8px", marginBottom: "15px" }} 
             />
 
-            <div className="space-y-2 mb-6 text-sm text-gray-700">
-              <p>
-                <span className="font-semibold text-[#0B2545]">Categoria:</span>{" "}
-                {ativoSelecionado.categoria}
-              </p>
-
-              <p>
-                <span className="font-semibold text-[#0B2545]">
-                  Capacidade:
-                </span>{" "}
-                {ativoSelecionado.capacidade || "Não informada"}
-              </p>
-
-              {ativoSelecionado.detalhes && (
-                <p className="text-xs bg-gray-50 p-2 rounded border mt-2">
-                  {typeof ativoSelecionado.detalhes === "object"
-                    ? JSON.stringify(ativoSelecionado.detalhes).replace(
-                        /[{}"]/g,
-                        " "
-                      )
-                    : ativoSelecionado.detalhes}
-                </p>
-              )}
+            <div style={{ color: "var(--color-text)", fontSize: "14px", lineHeight: "1.6" }}>
+              <p><b>Categoria:</b> {ativoSelecionado.categoria}</p>
+              <p><b>Capacidade:</b> {ativoSelecionado.capacidade || "Não informada"}</p>
             </div>
 
-            <div className="text-center">
+            <div style={{ marginTop: "25px" }}>
               <Link
-                href={`/site/calendario?ativo=${encodeURIComponent(
-                  ativoSelecionado.titulo
-                )}`}
-                className="inline-block w-full bg-[#0B2545] text-white font-bold
-                          py-2.5 px-6 rounded-lg hover:bg-blue-900
-                          transition-all shadow-md"
+                href={"/site/calendario?ativo=" + ativoSelecionado.titulo}
+                style={{
+                  display: "block",
+                  backgroundColor: "var(--color-primary)",
+                  color: "var(--color-white)",
+                  textAlign: "center",
+                  padding: "12px",
+                  borderRadius: "6px",
+                  textDecoration: "none",
+                  fontWeight: "bold",
+                  transition: "0.3s"
+                }}
               >
-                 Ver Disponibilidade
+                Ver Disponibilidade
               </Link>
             </div>
           </div>
