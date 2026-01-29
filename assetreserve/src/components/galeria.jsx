@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import fetchAtivos from "../services/ativos";
 
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
 function Galeria({ aoClicar }) {
     const [ativos, setAtivos] = useState([]);
     const [carregando, setCarregando] = useState(true);
@@ -79,7 +81,7 @@ function Galeria({ aoClicar }) {
                         >
                             <img
                                 className="w-full h-[200px] object-cover rounded-lg mb-3"
-                                src={ativo.imagem}
+                                src={`${SUPABASE_URL}/storage/v1/object/public/ativos-images/${ativo.imagem}`}
                                 alt={ativo.titulo}
                             />
                             <h3 className="font-bold text-[#0B2545] text-lg">{ativo.titulo}</h3>

@@ -7,7 +7,7 @@ export  default function CadastroAtivo() {
         nome: "",
         categoria: "Sala",
         capacidade: "Baixa",
-        disponivel: "TRUE",
+        disponivel: true,
         imagem: "",
         detalhes: "",
     })
@@ -59,7 +59,7 @@ export  default function CadastroAtivo() {
             capacidade: "Baixa",
             disponivel: "TRUE",
             imagem: "",
-            detalhes: {texto: formAtivo.detalhes},
+            detalhes: "",
         })
     }
 
@@ -121,7 +121,6 @@ export  default function CadastroAtivo() {
             <option value="baixa">Baixa</option>
             <option value="média">Média</option>
             <option value="alta">Alta</option>
-            <option value="muito alta">Muito Alta</option>
             </select>
           </div>
 
@@ -130,7 +129,13 @@ export  default function CadastroAtivo() {
             <label className="block text-sm font-medium text-[#0B2545] mb-1">
                 Imagem
             </label>
-            <input className=''
+            <input className='
+                block w-full text-sm text-gray-500
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-md file:border-0
+                file:text-sm file:font-semibold
+                file:bg-gray-100 file:text
+                hover:file:bg-gray-200'
                 type="file"
                 accept="image/*"
                 onChange={(e) => setFormAtivo({
