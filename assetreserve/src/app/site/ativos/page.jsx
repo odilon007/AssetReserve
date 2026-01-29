@@ -5,6 +5,9 @@ import Link from "next/link";
 import buscarAtivos from "@/services/ativos";
 import Galeria from "@/components/galeria";
 
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+
 export default function AtivosPage() {
   const [ativos, setAtivos] = useState([]);
   const [modalAberto, setModalAberto] = useState(false);
@@ -83,7 +86,7 @@ export default function AtivosPage() {
             </h2>
 
             <img
-              src={ativoSelecionado.imagem}
+              src={`${SUPABASE_URL}/storage/v1/object/public/ativos-images/${ativoSelecionado.imagem}`}
               alt={ativoSelecionado.titulo}
               className="w-full h-44 object-cover rounded-lg mb-4 border"
             />

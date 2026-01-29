@@ -5,6 +5,9 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/lib/supabaseClient";
 
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+
 //
 
 const REGEX_DATA_ISO = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
@@ -158,7 +161,7 @@ export default function CalendarioPage() {
 
       {/* ativo */}
       <section className="bg-white p-6 rounded-xl shadow w-full md:w-1/3 h-fit">
-        <img src={ativo.imagem} className="rounded mb-4 w-full object-cover" />
+        <img src={`${SUPABASE_URL}/storage/v1/object/public/ativos-images/${ativo.imagem}`} className="rounded mb-4 w-full object-cover" />
         <h2 className="text-2xl font-bold text-[#0B2545]">{ativo.titulo}</h2>
         <p className="mt-2"><b>Categoria:</b> {ativo.categoria}</p>
         <p><b>Capacidade:</b> {ativo.capacidade}</p>
