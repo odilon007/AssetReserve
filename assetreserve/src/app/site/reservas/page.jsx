@@ -1,5 +1,5 @@
 import fetchReservas from "@/services/reservas"
-import TabelaReservas from "@/components/reservas"
+import TabelaReservas from "@/components/reservas/reservas"
 
 export default async function Page() {
   const reservas = await fetchReservas()

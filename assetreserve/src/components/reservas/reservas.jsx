@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { RefreshCw } from 'lucide-react'
 import fetchReservas from '@/services/reservas'
 
@@ -21,6 +21,10 @@ export default function TabelaReservas() {
       setLoading(false)
     }
   }
+
+    useEffect(() => {
+    carregar()
+  }, [])
 
   const colunasIgnoradas = ['id', 'created_at']
 

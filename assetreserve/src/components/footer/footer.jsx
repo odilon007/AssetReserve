@@ -1,41 +1,56 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import styles from "./footer.module.css";
 
 export function Footer({ modalAberto }) {
-  const [visivel, setVisivel] = useState(true);
-  const [ultimaPosicao, setUltimaPosicao] = useState(0);
+  const [visivel, setVisivel] = useState(false);
 
   useEffect(() => {
-    function handleScroll() {
-      const posicaoAtual = window.scrollY;
+    function atualizarVisibilidade() {
+      const alturaTela = window.innerHeight;
+      const alturaPagina = document.documentElement.scrollHeight;
+      const scrollAtual = window.scrollY;
 
-      if (posicaoAtual > ultimaPosicao && posicaoAtual > 50) {
-        setVisivel(false);
-      } else {
+      const temScroll = alturaPagina > alturaTela;
+      const chegouNoFim =
+        alturaTela + scrollAtual >= alturaPagina - 2;
+
+      if (!temScroll || chegouNoFim) {
         setVisivel(true);
+      } else {
+        setVisivel(false);
       }
-
-      setUltimaPosicao(posicaoAtual);
     }
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [ultimaPosicao]);
+    // roda imediatamente
+    atualizarVisibilidade();
+
+    // observa mudanças no tamanho da página (conteúdo dinâmico)
+    const observer = new ResizeObserver(atualizarVisibilidade);
+    observer.observe(document.body);
+
+    window.addEventListener("scroll", atualizarVisibilidade);
+    window.addEventListener("resize", atualizarVisibilidade);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", atualizarVisibilidade);
+      window.removeEventListener("resize", atualizarVisibilidade);
+    };
+  }, []);
 
   if (modalAberto) return null;
 
   return (
     <footer
-      className={`
-        fixed bottom-0 left-0 w-full
-        bg-[#0B2545] text-white text-center p-3
-        z-40 shadow-[0_-2px_5px_rgba(0,0,0,0.1)]
-        transition-transform duration-300 ease-in-out
-        ${visivel ? "translate-y-0" : "translate-y-full"}
-      `}
+      className={`${styles.footer} ${
+        visivel ? styles.visible : styles.hidden
+      }`}
     >
-      <p>© 2025 AssetReserve — Todos os direitos reservados.</p>
+      <p className={styles.text}>
+        © 2025 AssetReserve — Todos os direitos reservados.
+      </p>
     </footer>
   );
 }
