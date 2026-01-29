@@ -3,60 +3,87 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
+import { validarCadastro, validarEmail }  from '@/utils/validacao';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AuthPage() {
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [erro, setErro] = useState('');
+  const [error, setError] = useState('');
+  const [mensagem, setMensagem] = useState('');
 
-  // Estados dos formulários
   const [formData, setFormData] = useState({
     nome: '',
     email: '',
     senha: '',
-    confirmarSenha: ''
+    confirmarSenha: '',
   });
 
-  const handleChange = (e) => {
+  const hadleChange = async (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleAuth = async (e) => {
+  const hadleAuth = async (e) => {
     e.preventDefault();
-    setErro('');
+    setError('');
+    setMensagem('');
     setLoading(true);
 
+    //====================Login==========================
     if (isLogin) {
-      // Lógica de LOGIN
+      const erroEmail = validarEmail(formData.email);
+      if (erroEmail) {
+        setError(erroEmail);
+        setLoading(false);
+        return;
+      }
+
       const { error } = await supabase.auth.signInWithPassword({
         email: formData.email,
         password: formData.senha,
       });
-      if (error) setErro('E-mail ou senha inválidos');
-      else window.location.href = '/site/ativos';
-    } else {
-      // Lógica de CADASTRO
-      if (formData.senha !== formData.confirmarSenha) {
-        setErro('As senhas não coincidem!');
-        setLoading(false);
-        return;
+
+      if (error) {
+        setError('Email ou senha inválidos.');
+      } else {
+        window.location.href = '/site/ativos';
       }
-      const { error } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.senha,
-        options: { data: { nome: formData.nome } },
-      });
-      if (error) setErro(error.message);
-      else setIsLogin(true); // Após cadastrar, joga para o login
+
+      setLoading(false);
+      return;
+    }
+
+    //====================Cadastro==========================
+    const erroValidação = validarCadastro(formData);
+    if (erroValidação) {
+      setError(erroValidação);
+      setLoading(false);
+      return;
+    }
+
+    const {error} = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.senha,
+      options: {
+        data: {
+          nome: formData.nome,
+        },
+        emailRedirectTo:`${location.origin}/auth/callback`,
+      },
+    });
+
+    if (error) {
+      setError(error.message);
+    } else {
+      setMensagem('Cadastro realizado com sucesso! Verifique seu e-mail para confirmar sua conta.');
+      setIsLogin(true);
     }
     setLoading(false);
   };
-
+  
   return (
-    // O background muda conforme o estado
-    <main 
+    <main
       className={`w-full min-h-screen flex items-center justify-center transition-colors duration-500 px-4 ${
         isLogin ? 'bg-gray-100' : 'bg-[#0B2545]'
       }`}
@@ -68,16 +95,25 @@ export default function AuthPage() {
             initial={{ x: isLogin ? -100 : 100, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: isLogin ? 100 : -100, opacity: 0 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
+            transition={{ duration: 0.4, ease: 'easeInOut' }}
             className={`w-full rounded-xl shadow-2xl p-8 ${
-              isLogin ? 'bg-white text-[#0B2545]' : 'bg-[#0B2545] text-white border border-gray-700'
+              isLogin
+                ? 'bg-white text-[#0B2545]'
+                : 'bg-[#0B2545] text-white border border-gray-700'
             }`}
           >
             <h2 className="text-3xl font-bold text-center mb-6">
               {isLogin ? 'Login' : 'Cadastro'}
             </h2>
 
-            {erro && <p className="text-red-500 text-sm text-center mb-4">{erro}</p>}
+            {erro && (
+              <p className="text-red-500 text-sm text-center mb-4">{erro}</p>
+            )}
+            {mensagem && (
+              <p className="text-green-500 text-sm text-center mb-4">
+                {mensagem}
+              </p>
+            )}
 
             <form onSubmit={handleAuth} className="space-y-4">
               {!isLogin && (
@@ -117,7 +153,9 @@ export default function AuthPage() {
 
               {!isLogin && (
                 <div>
-                  <label className="block text-sm font-medium mb-1">Confirmar Senha</label>
+                  <label className="block text-sm font-medium mb-1">
+                    Confirmar Senha
+                  </label>
                   <input
                     name="confirmarSenha"
                     type="password"
@@ -132,8 +170,8 @@ export default function AuthPage() {
                 type="submit"
                 disabled={loading}
                 className={`w-full py-3 rounded-lg font-semibold transition ${
-                  isLogin 
-                    ? 'bg-[#0B2545] text-white hover:bg-[#163b6b]' 
+                  isLogin
+                    ? 'bg-[#0B2545] text-white hover:bg-[#163b6b]'
                     : 'bg-white text-[#0B2545] hover:bg-gray-200'
                 }`}
               >
@@ -145,7 +183,9 @@ export default function AuthPage() {
               onClick={() => setIsLogin(!isLogin)}
               className="w-full mt-6 text-sm text-center font-medium hover:underline opacity-80"
             >
-              {isLogin ? "Não tem conta? Cadastre-se" : "Já tem conta? Faça login"}
+              {isLogin
+                ? 'Não tem conta? Cadastre-se'
+                : 'Já tem conta? Faça login'}
             </button>
           </motion.div>
         </AnimatePresence>
