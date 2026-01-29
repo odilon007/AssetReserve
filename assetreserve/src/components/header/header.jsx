@@ -62,11 +62,6 @@ export function Header() {
               Calendário
             </Link>
           </li> */}
-          <li>
-            <Link href="/site/cadastro-ativo" className="text-white hover:opacity-70">
-              Cadastro de Ativos
-            </Link>
-          </li>
 
           <li>
             <Link href="/site/contato" className="text-white hover:opacity-70">
