@@ -106,8 +106,8 @@ export default function AuthPage() {
               {isLogin ? 'Login' : 'Cadastro'}
             </h2>
 
-            {erro && (
-              <p className="text-red-500 text-sm text-center mb-4">{erro}</p>
+            {error && (
+              <p className="text-red-500 text-sm text-center mb-4">{error}</p>
             )}
             {mensagem && (
               <p className="text-green-500 text-sm text-center mb-4">
@@ -115,7 +115,7 @@ export default function AuthPage() {
               </p>
             )}
 
-            <form onSubmit={handleAuth} className="space-y-4">
+            <form onSubmit={hadleAuth} className="space-y-4">
               {!isLogin && (
                 <div>
                   <label className="block text-sm font-medium mb-1">Nome</label>
@@ -123,7 +123,7 @@ export default function AuthPage() {
                     name="nome"
                     type="text"
                     required
-                    onChange={handleChange}
+                    onChange={hadleChange}
                     className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black"
                   />
                 </div>
@@ -135,7 +135,7 @@ export default function AuthPage() {
                   name="email"
                   type="email"
                   required
-                  onChange={handleChange}
+                  onChange={hadleChange}
                   className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black"
                 />
               </div>
@@ -146,7 +146,7 @@ export default function AuthPage() {
                   name="senha"
                   type="password"
                   required
-                  onChange={handleChange}
+                  onChange={hadleChange}
                   className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black"
                 />
               </div>
@@ -160,7 +160,7 @@ export default function AuthPage() {
                     name="confirmarSenha"
                     type="password"
                     required
-                    onChange={handleChange}
+                    onChange={hadleChange}
                     className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black"
                   />
                 </div>
