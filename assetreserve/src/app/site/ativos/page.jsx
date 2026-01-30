@@ -42,14 +42,14 @@ export default function AtivosPage() {
   };
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold text-center mb-8 text-[#0B2545]">
         Galeria de Ativos Disponíveis
       </h1>
 
       <div className="px-4">
         {carregando ? (
-          <p className="text-center">Carregando...</p>
+          <p className="text-center animate-pulse">Carregando...</p>
         ) : (
           <Galeria listaAtivos={ativos} aoClicar={abrirModal} />
         )}
@@ -57,23 +57,15 @@ export default function AtivosPage() {
 
       {modalAberto && ativoSelecionado && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center
-                     bg-white/10 backdrop-blur-sm
-                     transition-opacity duration-300"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm transition-opacity duration-300"
           onClick={(e) => e.target === e.currentTarget && fecharModal()}
         >
           <div
-            className="bg-white p-6 rounded-2xl shadow-2xl
-                       w-full max-w-xl
-                       max-h-[75vh] overflow-y-auto
-                       mx-4 relative
-                       transform transition-all duration-300 ease-out
-                       animate-modal-in"
+            className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-xl max-h-[85vh] overflow-y-auto mx-4 relative transform transition-all duration-300 ease-out animate-in fade-in zoom-in"
           >
             <button
               onClick={fecharModal}
-              className="absolute top-3 right-4 text-2xl font-bold
-                         text-gray-400 hover:text-red-500 transition"
+              className="absolute top-3 right-4 text-2xl font-bold text-gray-400 hover:text-red-500 transition"
             >
               &times;
             </button>
@@ -83,9 +75,9 @@ export default function AtivosPage() {
             </h2>
 
             <img
-              src={ativoSelecionado.imagem}
+              src={ativoSelecionado.imagemUrl}
               alt={ativoSelecionado.titulo}
-              className="w-full h-44 object-cover rounded-lg mb-4 border"
+              className="w-full h-48 object-cover rounded-lg mb-4 border"
             />
 
             <div className="space-y-2 mb-6 text-sm text-gray-700">
@@ -95,34 +87,25 @@ export default function AtivosPage() {
               </p>
 
               <p>
-                <span className="font-semibold text-[#0B2545]">
-                  Capacidade:
-                </span>{" "}
+                <span className="font-semibold text-[#0B2545]">Capacidade:</span>{" "}
                 {ativoSelecionado.capacidade || "Não informada"}
               </p>
 
               {ativoSelecionado.detalhes && (
-                <p className="text-xs bg-gray-50 p-2 rounded border mt-2">
+                <div className="text-xs bg-gray-50 p-3 rounded border mt-2 text-gray-600 italic">
                   {typeof ativoSelecionado.detalhes === "object"
-                    ? JSON.stringify(ativoSelecionado.detalhes).replace(
-                        /[{}"]/g,
-                        " "
-                      )
+                    ? JSON.stringify(ativoSelecionado.detalhes).replace(/[{}"]/g, " ")
                     : ativoSelecionado.detalhes}
-                </p>
+                </div>
               )}
             </div>
 
             <div className="text-center">
               <Link
-                href={`/site/calendario?ativo=${encodeURIComponent(
-                  ativoSelecionado.titulo
-                )}`}
-                className="inline-block w-full bg-[#0B2545] text-white font-bold
-                          py-2.5 px-6 rounded-lg hover:bg-blue-900
-                          transition-all shadow-md"
+                href={`/site/calendario?ativo=${encodeURIComponent(ativoSelecionado.titulo)}`}
+                className="inline-block w-full bg-[#0B2545] text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-900 transition-all shadow-md"
               >
-                 Ver Disponibilidade
+                Ver Disponibilidade
               </Link>
             </div>
           </div>
