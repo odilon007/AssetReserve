@@ -12,13 +12,13 @@
   min-height: 10vh;
   padding: 12px 40px;
 
-  background-color: #0B2545;
+  background-color: var(--color-primary);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Logo */
 .logo {
-  color: white;
+  color: var(--color-white);
   font-size: 24px;
   font-weight: bold;
   text-decoration: none;
@@ -38,7 +38,7 @@
 
 /* Links */
 .link {
-  color: white;
+  color: var(--color-white);
   text-decoration: none;
 }
 
@@ -51,7 +51,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  color: white;
+  color: var(--color-white);
 }
 
 /* Avatar */
@@ -60,8 +60,8 @@
   height: 36px;
   border-radius: 50%;
 
-  background-color: white;
-  color: #0B2545;
+  background-color: var(--color-white);
+  color: var(--color-primary);
 
   display: flex;
   align-items: center;
@@ -81,7 +81,7 @@
   font-size: 14px;
   background: none;
   border: none;
-  color: white;
+  color: var(--color-white);
   cursor: pointer;
   opacity: 0.8;
 }

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import buscarAtivos from "@/services/ativos";
-import Galeria from "@/components/galeria";
+import Galeria from "@/components/galeria-ativos/galeria";
 
 export default function AtivosPage() {
   const [ativos, setAtivos] = useState([]);

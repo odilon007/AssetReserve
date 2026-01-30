@@ -52,6 +52,11 @@ export function Header() {
           </li>
 
           <li>
+            <Link href="/site/cadastro-ativo" className={styles.link}>
+              Cadastro/Ativos
+            </Link>
+          </li>
+          <li>
             <Link href="/site/contato" className={styles.link}>
               Fale conosco
             </Link>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import fetchAtivos from "../services/ativos";
+import fetchAtivos from "@/services/ativos";
 
 function Galeria({ aoClicar }) {
     const [ativos, setAtivos] = useState([]);

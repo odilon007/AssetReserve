@@ -1,0 +1,75 @@
+.main {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  transition: background-color 0.5s ease;
+}
+
+/* backgrounds */
+.loginBg {
+  background-color: var(--color-bg);
+}
+
+.cadastroBg {
+  background-color: var(--color-primary);
+}
+
+/* container */
+.wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  overflow: hidden;
+}
+
+/* card base */
+.card {
+  width: 100%;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 20px 40px rgba(223, 163, 163, 0.15);
+}
+
+/* variações */
+.cardLogin {
+  background-color: var(--color-white);
+  color: var(--color-primary);
+}
+
+.cardCadastro {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border: 1px solid var(--color-secondary);
+}
+
+/* form layout */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* erro */
+.error {
+  color: #ef4444; /* você pode criar var(--color-error) se quiser */
+  font-size: 14px;
+  text-align: center;
+}
+
+/* botão trocar modo */
+.switchBtn {
+  width: 100%;
+  margin-top: 24px;
+  font-size: 14px;
+  text-align: center;
+  font-weight: 500;
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.switchBtn:hover {
+  text-decoration: underline;
+}
