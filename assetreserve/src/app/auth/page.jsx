@@ -1,13 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
-import { validarCadastro, validarEmail }  from '@/utils/validacao';
+import { validarCadastro, validarEmail } from '@/utils/validacao';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const ADMIN_CODE = 'admin123'; // 🔐 troque depois
+
 export default function AuthPage() {
-  const router = useRouter();
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -18,19 +18,20 @@ export default function AuthPage() {
     email: '',
     senha: '',
     confirmarSenha: '',
+    codigoAdmin: '',
   });
 
-  const hadleChange = async (e) => {
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const hadleAuth = async (e) => {
+  const handleAuth = async (e) => {
     e.preventDefault();
     setError('');
     setMensagem('');
     setLoading(true);
 
-    //====================Login==========================
+    // ==================== LOGIN ====================
     if (isLogin) {
       const erroEmail = validarEmail(formData.email);
       if (erroEmail) {
@@ -54,138 +55,115 @@ export default function AuthPage() {
       return;
     }
 
-    //====================Cadastro==========================
-    const erroValidação = validarCadastro(formData);
-    if (erroValidação) {
-      setError(erroValidação);
+    // ==================== CADASTRO ====================
+    const erroValidacao = validarCadastro(formData);
+    if (erroValidacao) {
+      setError(erroValidacao);
       setLoading(false);
       return;
     }
 
-    const {error} = await supabase.auth.signUp({
+    const isAdmin = formData.codigoAdmin === ADMIN_CODE;
+
+    const { data, error } = await supabase.auth.signUp({
       email: formData.email,
       password: formData.senha,
       options: {
         data: {
           nome: formData.nome,
+          role: isAdmin ? 'admin' : 'user',
         },
-        emailRedirectTo:`${location.origin}/auth/callback`,
+        emailRedirectTo: `${location.origin}/auth/callback`,
       },
     });
 
     if (error) {
       setError(error.message);
     } else {
-      setMensagem('Cadastro realizado com sucesso! Verifique seu e-mail para confirmar sua conta.');
+      setMensagem(
+        isAdmin
+          ? 'Administrador cadastrado! Verifique seu e-mail.'
+          : 'Cadastro realizado! Verifique seu e-mail.'
+      );
       setIsLogin(true);
     }
+
     setLoading(false);
   };
-  
+
   return (
-    <main
-      className={`w-full min-h-screen flex items-center justify-center transition-colors duration-500 px-4 ${
-        isLogin ? 'bg-gray-100' : 'bg-[#0B2545]'
-      }`}
-    >
-      <div className="relative w-full max-w-md overflow-hidden bg-transparent">
+    <main className="min-h-screen flex items-center justify-center px-4">
+      <div className="w-full max-w-md">
         <AnimatePresence mode="wait">
           <motion.div
             key={isLogin ? 'login' : 'cadastro'}
-            initial={{ x: isLogin ? -100 : 100, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: isLogin ? 100 : -100, opacity: 0 }}
-            transition={{ duration: 0.4, ease: 'easeInOut' }}
-            className={`w-full rounded-xl shadow-2xl p-8 ${
-              isLogin
-                ? 'bg-white text-[#0B2545]'
-                : 'bg-[#0B2545] text-white border border-gray-700'
-            }`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="bg-white p-8 rounded-xl shadow"
           >
-            <h2 className="text-3xl font-bold text-center mb-6">
+            <h2 className="text-2xl font-bold text-center mb-6">
               {isLogin ? 'Login' : 'Cadastro'}
             </h2>
 
-            {error && (
-              <p className="text-red-500 text-sm text-center mb-4">{error}</p>
-            )}
-            {mensagem && (
-              <p className="text-green-500 text-sm text-center mb-4">
-                {mensagem}
-              </p>
-            )}
+            {error && <p className="text-red-500 text-center">{error}</p>}
+            {mensagem && <p className="text-green-500 text-center">{mensagem}</p>}
 
-            <form onSubmit={hadleAuth} className="space-y-4">
+            <form onSubmit={handleAuth} className="space-y-4">
               {!isLogin && (
-                <div>
-                  <label className="block text-sm font-medium mb-1">Nome</label>
+                <>
                   <input
                     name="nome"
-                    type="text"
-                    required
-                    onChange={hadleChange}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black"
+                    placeholder="Nome"
+                    onChange={handleChange}
+                    className="input"
                   />
-                </div>
+
+                  <input
+                    name="codigoAdmin"
+                    placeholder="Código de administrador (opcional)"
+                    onChange={handleChange}
+                    className="input"
+                  />
+                </>
               )}
 
-              <div>
-                <label className="block text-sm font-medium mb-1">E-mail</label>
-                <input
-                  name="email"
-                  type="email"
-                  required
-                  onChange={hadleChange}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black"
-                />
-              </div>
+              <input
+                name="email"
+                type="email"
+                placeholder="E-mail"
+                onChange={handleChange}
+                className="input"
+              />
 
-              <div>
-                <label className="block text-sm font-medium mb-1">Senha</label>
-                <input
-                  name="senha"
-                  type="password"
-                  required
-                  onChange={hadleChange}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black"
-                />
-              </div>
+              <input
+                name="senha"
+                type="password"
+                placeholder="Senha"
+                onChange={handleChange}
+                className="input"
+              />
 
               {!isLogin && (
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Confirmar Senha
-                  </label>
-                  <input
-                    name="confirmarSenha"
-                    type="password"
-                    required
-                    onChange={hadleChange}
-                    className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black"
-                  />
-                </div>
+                <input
+                  name="confirmarSenha"
+                  type="password"
+                  placeholder="Confirmar senha"
+                  onChange={handleChange}
+                  className="input"
+                />
               )}
 
-              <button
-                type="submit"
-                disabled={loading}
-                className={`w-full py-3 rounded-lg font-semibold transition ${
-                  isLogin
-                    ? 'bg-[#0B2545] text-white hover:bg-[#163b6b]'
-                    : 'bg-white text-[#0B2545] hover:bg-gray-200'
-                }`}
-              >
+              <button className="w-full bg-blue-600 text-white py-2 rounded">
                 {loading ? 'Processando...' : isLogin ? 'Entrar' : 'Cadastrar'}
               </button>
             </form>
 
             <button
               onClick={() => setIsLogin(!isLogin)}
-              className="w-full mt-6 text-sm text-center font-medium hover:underline opacity-80"
+              className="w-full mt-4 text-sm underline"
             >
-              {isLogin
-                ? 'Não tem conta? Cadastre-se'
-                : 'Já tem conta? Faça login'}
+              {isLogin ? 'Criar conta' : 'Já tenho conta'}
             </button>
           </motion.div>
         </AnimatePresence>
