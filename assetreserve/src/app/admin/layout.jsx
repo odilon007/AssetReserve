@@ -1,28 +1,44 @@
-import { redirect } from 'next/navigation';
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseClient';
 
-export default async function AdminLayout({ children }) {
-    const {
-        data: {user},
-    } = await supabase.auth.getUser();
+export default function AdminLayout({ children }) {
+    const router = useRouter();
+    const [loading, setLoading] = useState(true);
 
-    if (!user) {
-        redirect('/auth');
+    useEffect(() => {
+        const checkAdmin = async () => {
+            const {
+                data: { user },
+            } = await supabase.auth.getUser();
+
+            if (!user) {
+                router.push('/auth');
+                return;
+            }
+
+            const { data: profile, error } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', user.id)
+                .single();
+
+            if (error || profile?.role !== 'admin') {
+                router.push('/site/ativos');
+                return;
+            }
+
+            setLoading(false);
+        };
+
+        checkAdmin();
+    }, [router]);
+
+    if (loading) {
+        return <p className="p-6">Carregando...</p>;
     }
 
-    const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', user.id)
-        .single();
-
-    if (profile?.role !== 'admin') {
-        redirect('/site/ativos');
-    }
-
-    return (
-        <div ClassName="p-6">
-            {children}
-        </div>
-    );
+    return <div className="p-6">{children}</div>;
 }

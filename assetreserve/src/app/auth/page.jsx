@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabaseClient';
 import { validarCadastro, validarEmail } from '@/utils/validacao';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const ADMIN_CODE = 'admin123'; // 🔐 troque depois
+const ADMIN_CODE = 'admin123'; // ⚠️ depois mover para env
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
@@ -31,7 +31,7 @@ export default function AuthPage() {
     setMensagem('');
     setLoading(true);
 
-    // ==================== LOGIN ====================
+    // ================= LOGIN =================
     if (isLogin) {
       const erroEmail = validarEmail(formData.email);
       if (erroEmail) {
@@ -55,7 +55,7 @@ export default function AuthPage() {
       return;
     }
 
-    // ==================== CADASTRO ====================
+    // ================= CADASTRO =================
     const erroValidacao = validarCadastro(formData);
     if (erroValidacao) {
       setError(erroValidacao);
@@ -65,7 +65,7 @@ export default function AuthPage() {
 
     const isAdmin = formData.codigoAdmin === ADMIN_CODE;
 
-    const { data, error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signUp({
       email: formData.email,
       password: formData.senha,
       options: {
@@ -92,22 +92,28 @@ export default function AuthPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4">
+    <main className="w-full min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md">
         <AnimatePresence mode="wait">
           <motion.div
             key={isLogin ? 'login' : 'cadastro'}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="bg-white p-8 rounded-xl shadow"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="bg-white p-8 rounded-xl shadow-xl"
           >
-            <h2 className="text-2xl font-bold text-center mb-6">
+            <h2 className="text-3xl font-bold text-center mb-6">
               {isLogin ? 'Login' : 'Cadastro'}
             </h2>
 
-            {error && <p className="text-red-500 text-center">{error}</p>}
-            {mensagem && <p className="text-green-500 text-center">{mensagem}</p>}
+            {error && (
+              <p className="text-red-500 text-sm text-center mb-4">{error}</p>
+            )}
+            {mensagem && (
+              <p className="text-green-600 text-sm text-center mb-4">
+                {mensagem}
+              </p>
+            )}
 
             <form onSubmit={handleAuth} className="space-y-4">
               {!isLogin && (
@@ -115,15 +121,16 @@ export default function AuthPage() {
                   <input
                     name="nome"
                     placeholder="Nome"
+                    required
                     onChange={handleChange}
-                    className="input"
+                    className="w-full border rounded-lg px-4 py-2"
                   />
 
                   <input
                     name="codigoAdmin"
                     placeholder="Código de administrador (opcional)"
                     onChange={handleChange}
-                    className="input"
+                    className="w-full border rounded-lg px-4 py-2"
                   />
                 </>
               )}
@@ -132,16 +139,18 @@ export default function AuthPage() {
                 name="email"
                 type="email"
                 placeholder="E-mail"
+                required
                 onChange={handleChange}
-                className="input"
+                className="w-full border rounded-lg px-4 py-2"
               />
 
               <input
                 name="senha"
                 type="password"
                 placeholder="Senha"
+                required
                 onChange={handleChange}
-                className="input"
+                className="w-full border rounded-lg px-4 py-2"
               />
 
               {!isLogin && (
@@ -149,19 +158,24 @@ export default function AuthPage() {
                   name="confirmarSenha"
                   type="password"
                   placeholder="Confirmar senha"
+                  required
                   onChange={handleChange}
-                  className="input"
+                  className="w-full border rounded-lg px-4 py-2"
                 />
               )}
 
-              <button className="w-full bg-blue-600 text-white py-2 rounded">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-[#0B2545] text-white py-3 rounded-lg font-semibold"
+              >
                 {loading ? 'Processando...' : isLogin ? 'Entrar' : 'Cadastrar'}
               </button>
             </form>
 
             <button
               onClick={() => setIsLogin(!isLogin)}
-              className="w-full mt-4 text-sm underline"
+              className="w-full mt-6 text-sm text-center underline"
             >
               {isLogin ? 'Criar conta' : 'Já tenho conta'}
             </button>
