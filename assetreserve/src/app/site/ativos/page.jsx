@@ -4,18 +4,40 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import buscarAtivos from "@/services/ativos";
 import Galeria from "@/components/galeria-ativos/galeria";
+import FiltroAtivos from "@/components/galeria-ativos/FiltroAtivos";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function AtivosPage() {
+  const [filtroCategoria, setFiltroCategoria] = useState('');
+  const [filtroCapacidade, setFiltroCapacidade] = useState('');  
   const [ativos, setAtivos] = useState([]);
   const [modalAberto, setModalAberto] = useState(false);
   const [ativoSelecionado, setAtivoSelecionado] = useState(null);
   const [carregando, setCarregando] = useState(true);
 
+  const ativosFiltrados = ativos.filter(ativo => {
+    const categoriaOk = filtroCategoria ? ativo.categoria === filtroCategoria : true;
+    const capacidadeOk = filtroCapacidade ? ativo.capacidade === filtroCapacidade : true;
+    return categoriaOk && capacidadeOk;
+  });
+  
+
   useEffect(() => {
     async function carregarDados() {
       try {
         const dados = await buscarAtivos();
-        setAtivos(dados || []);
+        const ativosComUrl = (dados || []).map((ativo) => {
+          const { data } = supabase.storage
+          .from('ativos-images')
+          .getPublicUrl(ativo.imagem)
+
+          return {
+            ...ativo,
+            imagemUrl: data.publicUrl,
+          };
+        });
+
+        setAtivos(ativosComUrl)
       } catch (error) {
         console.error("Erro ao carregar dados:", error);
       } finally {
@@ -47,11 +69,19 @@ export default function AtivosPage() {
         Galeria de Ativos Disponíveis
       </h1>
 
-      <div className="px-4">
+      <div className="flex flex-col gap-10">
         {carregando ? (
           <p className="text-center animate-pulse">Carregando...</p>
         ) : (
-          <Galeria listaAtivos={ativos} aoClicar={abrirModal} />
+          <>
+          <FiltroAtivos
+            filtroCategoria={filtroCategoria}
+            setFiltroCategoria={setFiltroCategoria}
+            filtroCapacidade={filtroCapacidade}
+            setFiltroCapacidade={setFiltroCapacidade}
+          />
+          <Galeria ativos={ativosFiltrados} aoClicar={abrirModal} />
+          </>
         )}
       </div>
 
