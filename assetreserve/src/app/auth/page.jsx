@@ -96,7 +96,7 @@ export default function AuthPage() {
                   placeholder="Nome"
                   required
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black"
+                  className='w-full border border-gray-300 rounded-lg px-4 py-2 text-white'
                 />
               )}
 
@@ -106,7 +106,7 @@ export default function AuthPage() {
                 placeholder="E-mail"
                 required
                 onChange={handleChange}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black"
+                className={`w-full border border-gray-300 rounded-lg px-4 py-2 ${isLogin ? 'text-black' : 'text-white'}`}
               />
 
               {/* --- MODIFICAÇÃO: Wrapper e Lógica de Mostrar Senha --- */}
@@ -117,7 +117,7 @@ export default function AuthPage() {
                   placeholder="Senha"
                   required
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black pr-10"
+                  className={`w-full border border-gray-300 rounded-lg px-4 py-2 ${isLogin ? 'text-black' : 'text-white'}`}
                 />
                 <button
                   type="button"
@@ -144,7 +144,7 @@ export default function AuthPage() {
                   placeholder="Confirmar senha"
                   required
                   onChange={handleChange}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 text-black"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 text-white"
                 />
               )}
 

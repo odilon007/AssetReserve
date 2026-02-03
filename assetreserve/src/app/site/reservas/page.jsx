@@ -6,7 +6,7 @@ export default async function Page() {
 
   return (
     <div className="p-6  pb-20">
-      <h1 className="text-2xl font-bold mb-4">Reservas</h1>
+      <h1 className="text-2xl text-[#0B2545] font-bold mb-4">Reservas</h1>
 
       <TabelaReservas reservas={reservas} />
     </div>
