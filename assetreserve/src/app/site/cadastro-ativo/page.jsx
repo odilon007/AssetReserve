@@ -2,8 +2,14 @@
 
 import { supabase } from '@/lib/supabaseClient'
 import { useState } from 'react'
+import { FormInput } from "@/components/form/FormInput";
+import { FormSelect } from "@/components/form/FormSelect";
+import { FormTextArea } from "@/components/form/FormTextArea";
+import { Button } from "@/components/form/Button";
+
 
 export default function CadastroAtivo() {
+  const [loading, setLoading] = useState(false)
   const [formAtivo, setFormAtivo] = useState({
     nome: '',
     categoria: 'Sala',
@@ -13,7 +19,23 @@ export default function CadastroAtivo() {
     detalhes: '',
   })
 
-  const [loading, setLoading] = useState(false)
+  // Manipula campos de texto e select
+  function handleChange(e) {
+    const { name, value } = e.target
+    setFormAtivo(prev => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
+  // Manipula especificamente o upload de imagem
+  function handleImageChange(e) {
+    const file = e.target.files?.[0] || null
+    setFormAtivo(prev => ({
+      ...prev,
+      imagem: file,
+    }))
+  }
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -22,7 +44,7 @@ export default function CadastroAtivo() {
     try {
       let imagePath = null
 
-      // 📸 Upload da imagem (opcional)
+      // 1. Upload da imagem (se houver)
       if (formAtivo.imagem) {
         const fileExt = formAtivo.imagem.name.split('.').pop()
         const fileName = `${crypto.randomUUID()}.${fileExt}`
@@ -37,32 +59,29 @@ export default function CadastroAtivo() {
           alert('Erro ao enviar imagem')
           return
         }
-
         imagePath = filePath
       }
 
-      // 🧠 INSERT (alinhado com o schema real)
+      // 2. Insert no Banco de Dados
       const { data, error } = await supabase
         .from('ativos')
         .insert({
           titulo: formAtivo.nome,
           categoria: formAtivo.categoria,
           capacidade: formAtivo.capacidade,
-          disponivel: true,
+          disponivel: formAtivo.disponivel,
           imagem: imagePath,
           detalhes: formAtivo.detalhes,
         })
         
       if (error) {
-        console.error('Erro ao inserir:', error)
-        alert('Erro ao cadastrar ativo')
-        return
+        throw error
       }
 
       console.log('Ativo criado:', data)
       alert('Ativo cadastrado com sucesso!')
 
-      // 🔄 Reset
+      // 3. Reset do formulário
       setFormAtivo({
         nome: '',
         categoria: 'Sala',
@@ -71,116 +90,87 @@ export default function CadastroAtivo() {
         imagem: null,
         detalhes: '',
       })
+      
+      // Reset manual do input de arquivo
+      document.getElementById('input-imagem').value = ""
+
+    } catch (error) {
+      console.error('Erro geral:', error)
+      alert('Erro ao cadastrar ativo. Verifique o console.')
     } finally {
       setLoading(false)
     }
   }
 
-  function handleChange(e) {
-    const { name, value } = e.target
-    setFormAtivo(prev => ({
-      ...prev,
-      [name]: value,
-    }))
-  }
-
   return (
     <section className="w-full min-h-screen flex items-center justify-center bg-gray-100 px-4 py-16">
       <div className="w-full max-w-3xl bg-white rounded-xl shadow-lg p-8">
+        
         <h2 className="text-3xl font-bold text-[#0B2545] text-center mb-6">
           Cadastro de Ativos
         </h2>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
-          {/* Título */}
-          <div>
-            <label className="block text-sm font-medium text-[#0B2545] mb-1">
-              Nome do ativo
-            </label>
-            <input
-              type="text"
-              name="nome"
-              required
-              value={formAtivo.nome}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2"
-            />
-          </div>
+          
+          <FormInput
+            label="Nome do ativo"
+            id="nome"
+            name="nome"
+            required
+            value={formAtivo.nome}
+            onChange={handleChange}
+            placeholder="Ex: Sala de Reunião A"
+          />
 
-          {/* Categoria */}
-          <div>
-            <label className="block text-sm font-medium text-[#0B2545] mb-1">
-              Categoria
-            </label>
-            <select
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormSelect
+              label="Categoria"
+              id="categoria"
               name="categoria"
               value={formAtivo.categoria}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white"
             >
               <option value="Sala">Sala</option>
               <option value="Equipamento">Equipamento</option>
-            </select>
-          </div>
+            </FormSelect>
 
-          {/* Capacidade */}
-          <div>
-            <label className="block text-sm font-medium text-[#0B2545] mb-1">
-              Capacidade
-            </label>
-            <select
+            <FormSelect
+              label="Capacidade"
+              id="capacidade"
               name="capacidade"
               value={formAtivo.capacidade}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white"
             >
               <option value="Baixa">Baixa</option>
               <option value="Média">Média</option>
               <option value="Alta">Alta</option>
-            </select>
+            </FormSelect>
           </div>
 
-          {/* Imagem */}
-          <div>
-            <label className="block text-sm font-medium text-[#0B2545] mb-1">
-              Imagem
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={e =>
-                setFormAtivo(prev => ({
-                  ...prev,
-                  imagem: e.target.files?.[0] || null,
-                }))
-              }
-            />
+          <FormInput
+            label="Imagem de destaque"
+            id="input-imagem" // ID usado para resetar o campo depois
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            // Nota: Inputs do tipo file não aceitam a prop "value" controlada
+          />
+
+          <FormTextArea
+            label="Detalhes e Observações"
+            id="detalhes"
+            name="detalhes"
+            value={formAtivo.detalhes}
+            onChange={handleChange}
+            placeholder="Descreva o ativo..."
+          />
+
+          <div className="text-center pt-2">
+            <Button type="submit" isLoading={loading}>
+              Confirmar Cadastro
+            </Button>
           </div>
 
-          {/* Detalhes */}
-          <div>
-            <label className="block text-sm font-medium text-[#0B2545] mb-1">
-              Detalhes
-            </label>
-            <textarea
-              rows="4"
-              name="detalhes"
-              value={formAtivo.detalhes}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 resize-none"
-            />
-          </div>
-
-          {/* Botão */}
-          <div className="text-center">
-            <button
-              type="submit"
-              disabled={loading}
-              className="bg-[#0B2545] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#163b6b] disabled:opacity-50"
-            >
-              {loading ? 'Salvando...' : 'Confirmar'}
-            </button>
-          </div>
         </form>
       </div>
     </section>

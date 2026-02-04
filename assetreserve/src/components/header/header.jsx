@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import styles from './header.module.css';
+import NavLinks from './NavLinks';
 
 export function Header() {
   const [user, setUser] = useState(null);
@@ -39,28 +40,8 @@ export function Header() {
         </Link>
 
         <ul className={styles.menu}>
-          <li>
-            <Link href="/site/ativos" className={styles.link}>
-              Início
-            </Link>
-          </li>
-
-          <li>
-            <Link href="/site/reservas" className={styles.link}>
-              Reserva
-            </Link>
-          </li>
-
-          <li>
-            <Link href="/site/cadastro-ativo" className={styles.link}>
-              Cadastro/Ativos
-            </Link>
-          </li>
-          <li>
-            <Link href="/site/contato" className={styles.link}>
-              Fale conosco
-            </Link>
-          </li>
+          
+          <NavLinks />
 
           {/* Usuário */}
           <li className={styles.user}>

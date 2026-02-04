@@ -3,41 +3,38 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import buscarAtivos from "@/services/ativos";
-import Galeria from "@/components/galeria-ativos/galeria";
-import FiltroAtivos from "@/components/galeria-ativos/FiltroAtivos";
+import Galeria from "@/components/ativos/galeria";
+import FiltroAtivos from "@/components/ativos/FiltroAtivos";
 import { supabase } from "@/lib/supabaseClient";
 
 export default function AtivosPage() {
   const [filtroCategoria, setFiltroCategoria] = useState('');
-  const [filtroCapacidade, setFiltroCapacidade] = useState('');  
+  const [filtroCapacidade, setFiltroCapacidade] = useState('');
   const [ativos, setAtivos] = useState([]);
   const [modalAberto, setModalAberto] = useState(false);
   const [ativoSelecionado, setAtivoSelecionado] = useState(null);
   const [carregando, setCarregando] = useState(true);
 
+  // Lógica de filtro
   const ativosFiltrados = ativos.filter(ativo => {
     const categoriaOk = filtroCategoria ? ativo.categoria === filtroCategoria : true;
     const capacidadeOk = filtroCapacidade ? ativo.capacidade === filtroCapacidade : true;
     return categoriaOk && capacidadeOk;
   });
-  
 
+  // useEffects 
   useEffect(() => {
     async function carregarDados() {
       try {
         const dados = await buscarAtivos();
         const ativosComUrl = (dados || []).map((ativo) => {
           const { data } = supabase.storage
-          .from('ativos-images')
-          .getPublicUrl(ativo.imagem)
+            .from('ativos-images')
+            .getPublicUrl(ativo.imagem);
 
-          return {
-            ...ativo,
-            imagemUrl: data.publicUrl,
-          };
+          return { ...ativo, imagemUrl: data.publicUrl };
         });
-
-        setAtivos(ativosComUrl)
+        setAtivos(ativosComUrl);
       } catch (error) {
         console.error("Erro ao carregar dados:", error);
       } finally {
@@ -47,12 +44,12 @@ export default function AtivosPage() {
     carregarDados();
   }, []);
 
-  // Trava o scroll do fundo quando o modal estiver aberto
   useEffect(() => {
     document.body.style.overflow = modalAberto ? "hidden" : "auto";
     return () => (document.body.style.overflow = "auto");
   }, [modalAberto]);
 
+  // Handlers 
   const abrirModal = (ativo) => {
     setAtivoSelecionado(ativo);
     setModalAberto(true);
@@ -64,83 +61,99 @@ export default function AtivosPage() {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold text-center mb-8 text-[#0B2545]">
-        Galeria de Ativos Disponíveis
-      </h1>
+    <main className="container mx-auto py-8 px-4">
+      
+      <header className="mb-8">
+        <h1 className="text-3xl font-bold text-center text-[#0B2545]">
+          Galeria de Ativos Disponíveis
+        </h1>
+      </header>
 
-      <div className="flex flex-col gap-10">
+      <section className="flex flex-col gap-10" aria-busy={carregando}>
         {carregando ? (
-          <p className="text-center animate-pulse">Carregando...</p>
+          <p className="text-center animate-pulse" role="status">Carregando...</p>
         ) : (
           <>
-          <FiltroAtivos
-            filtroCategoria={filtroCategoria}
-            setFiltroCategoria={setFiltroCategoria}
-            filtroCapacidade={filtroCapacidade}
-            setFiltroCapacidade={setFiltroCapacidade}
-          />
-          <Galeria ativos={ativosFiltrados} aoClicar={abrirModal} />
+            <FiltroAtivos
+              filtroCategoria={filtroCategoria}
+              setFiltroCategoria={setFiltroCategoria}
+              filtroCapacidade={filtroCapacidade}
+              setFiltroCapacidade={setFiltroCapacidade}
+            />
+            <Galeria ativos={ativosFiltrados} aoClicar={abrirModal} />
           </>
         )}
-      </div>
+      </section>
 
       {modalAberto && ativoSelecionado && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm transition-opacity duration-300"
           onClick={(e) => e.target === e.currentTarget && fecharModal()}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="modal-titulo"
         >
-          <div
+          <article 
             className="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-xl max-h-[85vh] overflow-y-auto mx-4 relative transform transition-all duration-300 ease-out animate-in fade-in zoom-in"
           >
             <button
               onClick={fecharModal}
               className="absolute top-3 right-4 text-2xl font-bold text-gray-400 hover:text-red-500 transition"
+              aria-label="Fechar detalhes do ativo" 
             >
               &times;
             </button>
 
-            <h2 className="text-xl font-bold text-[#0B2545] mb-3 pr-8">
-              {ativoSelecionado.titulo}
-            </h2>
+            <header className="mb-3 pr-8">
+              <h2 id="modal-titulo" className="text-xl font-bold text-[#0B2545]">
+                {ativoSelecionado.titulo}
+              </h2>
+            </header>
 
-            <img
-              src={ativoSelecionado.imagemUrl}
-              alt={ativoSelecionado.titulo}
-              className="w-full h-48 object-cover rounded-lg mb-4 border"
-            />
+            <figure className="mb-6">
+              <img
+                src={ativoSelecionado.imagemUrl}
+                alt={`Foto de ${ativoSelecionado.titulo}`} // Alt mais descritivo
+                className="w-full h-48 object-cover rounded-lg mb-4 border"
+              />
+              <figcaption>
+                <dl className="space-y-2 text-sm text-gray-700">
+                  <div className="flex gap-1">
+                    <dt className="font-semibold text-[#0B2545]">Categoria:</dt>
+                    <dd>{ativoSelecionado.categoria}</dd>
+                  </div>
 
-            <div className="space-y-2 mb-6 text-sm text-gray-700">
-              <p>
-                <span className="font-semibold text-[#0B2545]">Categoria:</span>{" "}
-                {ativoSelecionado.categoria}
-              </p>
+                  <div className="flex gap-1">
+                    <dt className="font-semibold text-[#0B2545]">Capacidade:</dt>
+                    <dd>{ativoSelecionado.capacidade || "Não informada"}</dd>
+                  </div>
 
-              <p>
-                <span className="font-semibold text-[#0B2545]">Capacidade:</span>{" "}
-                {ativoSelecionado.capacidade || "Não informada"}
-              </p>
+                  {ativoSelecionado.detalhes && (
+                    <div className="mt-2">
+                      <dt className="sr-only">Detalhes</dt> 
+                      <dd className="text-xs bg-gray-50 p-3 rounded border text-gray-600 italic">
+                        {typeof ativoSelecionado.detalhes === "object"
+                          ? JSON.stringify(ativoSelecionado.detalhes).replace(/[{}"]/g, " ")
+                          : ativoSelecionado.detalhes}
+                      </dd>
+                    </div>
+                  )}
+                </dl>
+              </figcaption>
+            </figure>
 
-              {ativoSelecionado.detalhes && (
-                <div className="text-xs bg-gray-50 p-3 rounded border mt-2 text-gray-600 italic">
-                  {typeof ativoSelecionado.detalhes === "object"
-                    ? JSON.stringify(ativoSelecionado.detalhes).replace(/[{}"]/g, " ")
-                    : ativoSelecionado.detalhes}
-                </div>
-              )}
-            </div>
-
-            <div className="text-center">
+            <footer className="text-center">
               <Link
                 href={`/site/calendario?ativo=${encodeURIComponent(ativoSelecionado.titulo)}`}
                 className="inline-block w-full bg-[#0B2545] text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-900 transition-all shadow-md"
               >
                 Ver Disponibilidade
               </Link>
-            </div>
-          </div>
+            </footer>
+
+          </article>
         </div>
       )}
-    </div>
+    </main>
   );
 }
