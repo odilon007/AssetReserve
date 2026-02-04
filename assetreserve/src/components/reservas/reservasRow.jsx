@@ -12,7 +12,9 @@ function formatarValor(valor) {
   return String(valor)
 }
 
-function ReservasRow({ reserva, colunas }) {
+function ReservasRow({ reserva, colunas, userId, onDelete }) {
+  const ehDono = reserva.usuario_id === userId
+
   return (
     <tr className="hover:bg-gray-50 transition-colors">
       {colunas.map((coluna) => (
@@ -20,6 +22,17 @@ function ReservasRow({ reserva, colunas }) {
           {formatarValor(reserva[coluna])}
         </td>
       ))}
+
+      <td className="px-6 py-4">
+        {ehDono && (
+          <button
+            onClick={() => onDelete(reserva.id)}
+            className="text-red-600 hover:text-red-800 font-semibold"
+          >
+            Cancelar
+          </button>
+        )}
+      </td>
     </tr>
   )
 }

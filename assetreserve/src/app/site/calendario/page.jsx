@@ -79,19 +79,26 @@ export default function CalendarioPage() {
   async function reservarHorario(hora) {
     if (!REGEX_HORA.test(hora)) return;
 
+    const { data: { user } } = await supabase.auth.getUser();
+
+    const nomeUsuario =
+      user?.user_metadata?.nome || user?.email || "ANONIMO";
+
     const { error } = await supabase.from("reservas").insert({
       ativo: ativoTitulo,
       data: diaSelecionado,
       horario: hora,
-      usuario: "ANONIMO",
+      usuario: nomeUsuario,
+      usuario_id: user.id
     });
 
     if (error) {
-    alert("Erro ao reservar");
-  } else {
-    setHorariosOcupados((prev) => [...prev, hora]);
-    alert("Reserva feita com sucesso ✅");
-  }
+      console.log(error)
+      alert("Erro ao reservar");
+    } else {
+      setHorariosOcupados((prev) => [...prev, hora]);
+      alert("Reserva feita com sucesso ✅");
+    }
 
     if (!error) {
       setHorariosOcupados([...horariosOcupados, hora]);

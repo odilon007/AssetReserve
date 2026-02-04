@@ -22,6 +22,5 @@ export default async function fetchAtivos() {
   }
 
   const data = await response.json()
-  console.log('DADOS:', data)
   return data
 }

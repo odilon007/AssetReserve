@@ -1,6 +1,6 @@
 import ReservasRow from './reservasRow'
 
-export default function ReservasTable({ reservas, colunas }) {
+export default function ReservasTable({ reservas, colunas, userId, onDelete }) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-left text-sm whitespace-nowrap">
@@ -14,6 +14,10 @@ export default function ReservasTable({ reservas, colunas }) {
                 {coluna.replaceAll('_', ' ')}
               </th>
             ))}
+
+            <th className="px-6 py-3 border-b border-gray-200">
+              Ações
+            </th>
           </tr>
         </thead>
 
@@ -23,6 +27,8 @@ export default function ReservasTable({ reservas, colunas }) {
               key={reserva.id}
               reserva={reserva}
               colunas={colunas}
+              userId={userId}
+              onDelete={onDelete}
             />
           ))}
         </tbody>

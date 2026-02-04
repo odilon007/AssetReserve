@@ -22,6 +22,5 @@ export default async function fetchReservas() {
   }
 
   const data = await response.json()
-  console.log('RESERVAS:', data)
   return data
 }
