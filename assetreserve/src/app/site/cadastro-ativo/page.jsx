@@ -7,7 +7,6 @@ import { FormSelect } from "@/components/form/FormSelect";
 import { FormTextArea } from "@/components/form/FormTextArea";
 import { Button } from "@/components/form/Button";
 
-
 export default function CadastroAtivo() {
   const [loading, setLoading] = useState(false)
   const [formAtivo, setFormAtivo] = useState({
@@ -19,22 +18,14 @@ export default function CadastroAtivo() {
     detalhes: '',
   })
 
-  // Manipula campos de texto e select
   function handleChange(e) {
     const { name, value } = e.target
-    setFormAtivo(prev => ({
-      ...prev,
-      [name]: value,
-    }))
+    setFormAtivo(prev => ({ ...prev, [name]: value }))
   }
 
-  // Manipula especificamente o upload de imagem
   function handleImageChange(e) {
     const file = e.target.files?.[0] || null
-    setFormAtivo(prev => ({
-      ...prev,
-      imagem: file,
-    }))
+    setFormAtivo(prev => ({ ...prev, imagem: file }))
   }
 
   async function handleSubmit(e) {
@@ -44,7 +35,7 @@ export default function CadastroAtivo() {
     try {
       let imagePath = null
 
-      // 1. Upload da imagem (se houver)
+      // 1. Upload
       if (formAtivo.imagem) {
         const fileExt = formAtivo.imagem.name.split('.').pop()
         const fileName = `${crypto.randomUUID()}.${fileExt}`
@@ -62,7 +53,7 @@ export default function CadastroAtivo() {
         imagePath = filePath
       }
 
-      // 2. Insert no Banco de Dados
+      // 2. Insert
       const { data, error } = await supabase
         .from('ativos')
         .insert({
@@ -74,14 +65,11 @@ export default function CadastroAtivo() {
           detalhes: formAtivo.detalhes,
         })
         
-      if (error) {
-        throw error
-      }
+      if (error) throw error
 
-      console.log('Ativo criado:', data)
       alert('Ativo cadastrado com sucesso!')
 
-      // 3. Reset do formulário
+      // 3. Reset
       setFormAtivo({
         nome: '',
         categoria: 'Sala',
@@ -91,26 +79,30 @@ export default function CadastroAtivo() {
         detalhes: '',
       })
       
-      // Reset manual do input de arquivo
-      document.getElementById('input-imagem').value = ""
+      const fileInput = document.getElementById('input-imagem');
+      if (fileInput) fileInput.value = "";
 
     } catch (error) {
       console.error('Erro geral:', error)
-      alert('Erro ao cadastrar ativo. Verifique o console.')
+      alert('Erro ao cadastrar ativo.')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <section className="w-full min-h-screen flex items-center justify-center bg-gray-100 px-4 py-16">
-      <div className="w-full max-w-3xl bg-white rounded-xl shadow-lg p-8">
+    // Ajuste: py-8 para mobile, py-16 para desktop
+    <section className="w-full min-h-screen flex items-center justify-center bg-gray-100 px-4 py-8 md:py-16">
+      {/* Ajuste: p-6 para mobile, p-8 para desktop */}
+      <div className="w-full max-w-3xl bg-white rounded-xl shadow-lg p-6 md:p-8">
         
-        <h2 className="text-3xl font-bold text-[#0B2545] text-center mb-6">
+        {/* Ajuste: Texto menor no mobile (2xl) e maior no desktop (3xl) */}
+        <h2 className="text-2xl md:text-3xl font-bold text-[#0B2545] text-center mb-6">
           Cadastro de Ativos
         </h2>
 
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        {/* Ajuste: Espaçamento vertical condicional */}
+        <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
           
           <FormInput
             label="Nome do ativo"
@@ -122,7 +114,8 @@ export default function CadastroAtivo() {
             placeholder="Ex: Sala de Reunião A"
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Grid já estava bom, mantive cols-1 (mobile) para cols-2 (md) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <FormSelect
               label="Categoria"
               id="categoria"
@@ -149,11 +142,10 @@ export default function CadastroAtivo() {
 
           <FormInput
             label="Imagem de destaque"
-            id="input-imagem" // ID usado para resetar o campo depois
+            id="input-imagem"
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-            // Nota: Inputs do tipo file não aceitam a prop "value" controlada
           />
 
           <FormTextArea
@@ -165,8 +157,8 @@ export default function CadastroAtivo() {
             placeholder="Descreva o ativo..."
           />
 
-          <div className="text-center pt-2">
-            <Button type="submit" isLoading={loading}>
+          <div className="text-center pt-2 md:pt-4">
+            <Button type="submit" isLoading={loading} className="w-full md:w-auto">
               Confirmar Cadastro
             </Button>
           </div>
