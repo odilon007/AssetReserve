@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabaseClient'
 import { motion, AnimatePresence } from 'framer-motion'
 import styles from './authPage.module.css'
@@ -11,8 +11,18 @@ import { validarEmail, validarCadastro, validarSenhaDetalhada, } from '@/utils/v
 
 export default function AuthPage() {
   const router = useRouter()
+  const searchParams  = useSearchParams()
 
-  const [isLogin, setIsLogin] = useState(true)
+  const modoInicial = searchParams.get('mode')
+
+
+  const [isLogin, setIsLogin] = useState(modoInicial !== 'cadastro')
+
+  useEffect(() => {
+    setIsLogin(searchParams.get('mode') !== 'cadastro')
+  }, [searchParams])
+
+
   const [loading, setLoading] = useState(false)
   const [erro, setErro] = useState('')
   const [showPassword, setShowPassword] = useState(false)

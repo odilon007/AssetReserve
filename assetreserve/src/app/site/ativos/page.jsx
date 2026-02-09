@@ -86,71 +86,97 @@ export default function AtivosPage() {
         )}
       </section>
 
+{/* --- MODAL RESPONSIVO --- */}
       {modalAberto && ativoSelecionado && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm transition-opacity duration-300 p-4"
+          className="
+    fixed inset-0 z-[99]
+    flex justify-center
+    items-start md:items-center
+    p-4
+    bg-black/60 backdrop-blur-sm
+  "
           onClick={(e) => e.target === e.currentTarget && fecharModal()}
           role="dialog"
           aria-modal="true"
-          aria-labelledby="modal-titulo"
         >
-          {/* Modal agora ocupa 95% da tela no mobile e tem largura fixa no desktop */}
           <article 
-            className="bg-white p-4 md:p-6 rounded-2xl shadow-2xl w-full md:max-w-xl max-h-[90vh] md:max-h-[85vh] overflow-y-auto relative transform transition-all duration-300 ease-out animate-in fade-in zoom-in"
+            className="
+    bg-white w-full max-w-lg
+    rounded-2xl shadow-2xl
+    overflow-hidden flex flex-col
+    max-h-[90vh]
+    mt-6 md:mt-0
+  "
           >
-            <button
-              onClick={fecharModal}
-              className="absolute top-3 right-4 text-2xl font-bold text-gray-400 hover:text-red-500 transition p-1"
-              aria-label="Fechar detalhes do ativo" 
-            >
-              &times;
-            </button>
-
-            <header className="mb-3 pr-8">
-              <h2 id="modal-titulo" className="text-lg md:text-xl font-bold text-[#0B2545]">
+            {/* 1. Cabeçalho do Modal (Fixo) */}
+            <header className="flex items-center justify-between px-5 py-4 border-b border-gray-100 shrink-0 bg-white">
+              <h2 className="text-lg md:text-xl font-bold text-[#0B2545] truncate pr-4">
                 {ativoSelecionado.titulo}
               </h2>
+              <button
+                onClick={fecharModal}
+                className="p-2 -mr-2 rounded-full hover:bg-gray-100 text-gray-400 hover:text-red-500 transition-colors"
+                aria-label="Fechar"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </header>
 
-            <figure className="mb-6">
-              <img
-                src={ativoSelecionado.imagemUrl}
-                alt={`Foto de ${ativoSelecionado.titulo}`}
-                // Altura da imagem ajustada para mobile (h-40) e desktop (h-48)
-                className="w-full h-40 md:h-48 object-cover rounded-lg mb-4 border"
-              />
-              <figcaption>
-                <dl className="space-y-2 text-sm text-gray-700">
-                  <div className="flex flex-col sm:flex-row sm:gap-1">
-                    <dt className="font-semibold text-[#0B2545]">Categoria:</dt>
-                    <dd>{ativoSelecionado.categoria}</dd>
-                  </div>
+            {/* 2. Corpo do Modal (Rolagem Interna) */}
+            <div className="overflow-y-auto p-5 space-y-5 overscroll-contain">
+              <figure className="relative">
+                <img
+                  src={ativoSelecionado.imagemUrl}
+                  alt={ativoSelecionado.titulo}
+                  // max-h-48 garante que a imagem não ocupe a tela toda no mobile
+                  className="w-full h-auto max-h-48 md:max-h-64 object-cover rounded-xl shadow-sm border border-gray-100"
+                />
+              </figure>
 
-                  <div className="flex flex-col sm:flex-row sm:gap-1">
-                    <dt className="font-semibold text-[#0B2545]">Capacidade:</dt>
-                    <dd>{ativoSelecionado.capacidade || "Não informada"}</dd>
+              <div className="space-y-4">
+                {/* Grid de Informações */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                    <span className="block text-[10px] sm:text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Categoria</span>
+                    <span className="text-sm sm:text-base text-[#0B2545] font-semibold block truncate">
+                      {ativoSelecionado.categoria}
+                    </span>
                   </div>
+                  <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                    <span className="block text-[10px] sm:text-xs font-bold text-gray-500 uppercase tracking-wide mb-1">Capacidade</span>
+                    <span className="text-sm sm:text-base text-[#0B2545] font-semibold block truncate">
+                      {ativoSelecionado.capacidade || "N/A"}
+                    </span>
+                  </div>
+                </div>
 
-                  {ativoSelecionado.detalhes && (
-                    <div className="mt-2">
-                      <dt className="sr-only">Detalhes</dt> 
-                      <dd className="text-xs bg-gray-50 p-3 rounded border text-gray-600 italic break-words">
-                        {typeof ativoSelecionado.detalhes === "object"
-                          ? JSON.stringify(ativoSelecionado.detalhes).replace(/[{}"]/g, " ")
-                          : ativoSelecionado.detalhes}
-                      </dd>
+                {/* Detalhes */}
+                {ativoSelecionado.detalhes && (
+                  <div>
+                    <h3 className="text-sm font-bold text-[#0B2545] mb-2">Detalhes e Observações</h3>
+                    <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg border border-gray-100 leading-relaxed break-words min-h-[60px]">
+                      {typeof ativoSelecionado.detalhes === "object"
+                        ? JSON.stringify(ativoSelecionado.detalhes, null, 2).replace(/[{}"]/g, "")
+                        : ativoSelecionado.detalhes}
                     </div>
-                  )}
-                </dl>
-              </figcaption>
-            </figure>
+                  </div>
+                )}
+              </div>
+            </div>
 
-            <footer className="text-center sticky bottom-0 bg-white pt-2">
+            {/* 3. Rodapé do Modal (Fixo) */}
+            <footer className="p-4 border-t border-gray-100 bg-white shrink-0 pb-6 md:pb-4">
               <Link
                 href={`/site/calendario?ativo=${encodeURIComponent(ativoSelecionado.titulo)}`}
-                className="block w-full bg-[#0B2545] text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-900 transition-all shadow-md text-sm md:text-base"
+                className="flex items-center justify-center w-full bg-[#0B2545] text-white font-bold py-3.5 px-6 rounded-xl hover:bg-blue-900 active:scale-[0.98] transition-all shadow-lg shadow-blue-900/20 text-sm md:text-base"
               >
-                Ver Disponibilidade
+                <span>Ver Disponibilidade</span>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
               </Link>
             </footer>
 

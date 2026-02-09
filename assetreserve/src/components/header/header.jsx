@@ -49,7 +49,7 @@ export function Header() {
           <NavLinks />
 
           {/* Seção do Usuário */}
-          <li className="flex items-center gap-3 border-l border-blue-800 pl-4 md:pl-6">
+          <li className="flex items-center gap-3 pl-4 md:pl-6">
             
             <div className="flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-full bg-white text-[#0B2545] font-bold text-sm md:text-base">
               {nome.charAt(0).toUpperCase()}

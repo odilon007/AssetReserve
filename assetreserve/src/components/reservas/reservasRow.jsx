@@ -18,12 +18,12 @@ function ReservasRow({ reserva, colunas, userId, onDelete }) {
   return (
     <tr className="hover:bg-gray-50 transition-colors">
       {colunas.map((coluna) => (
-        <td key={coluna} className="px-6 py-4 text-gray-700">
+        <td key={coluna} className="px-4 md:px-6 py-4 text-gray-700">
           {formatarValor(reserva[coluna])}
         </td>
       ))}
 
-      <td className="px-6 py-4">
+      <td className="px-4 md:px-6 py-4">
         {ehDono && (
           <button
             onClick={() => onDelete(reserva.id)}
