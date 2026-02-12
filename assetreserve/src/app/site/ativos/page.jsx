@@ -58,6 +58,22 @@ export default function AtivosPage() {
     setAtivoSelecionado(null);
   };
 
+  async function deletarAtivo(id) {
+    const { data, error } = await supabase
+      .from('ativos')
+      .delete()
+      .eq('id', id);
+    
+    if (error) {
+      console.error('Erro ao deletar: ', error.message);
+      return;
+    }
+
+    setAtivos(prev => prev.filter(ativo => ativo.id !== id));
+
+    alert('Reserva deletada com sucesso!');
+  }
+
   return (
     // Container ajustado para mobile e desktop
     <main className="container mx-auto py-6 px-4 md:py-8">
@@ -168,16 +184,25 @@ export default function AtivosPage() {
             </div>
 
             {/* 3. Rodapé do Modal (Fixo) */}
-            <footer className="p-4 border-t border-gray-100 bg-white shrink-0 pb-6 md:pb-4">
+            <footer className="flex  gap-2 p-4 border-t border-gray-100 bg-white shrink-0 pb-6 md:pb-4">
               <Link
                 href={`/site/calendario?ativo=${encodeURIComponent(ativoSelecionado.titulo)}`}
-                className="flex items-center justify-center w-full bg-[#0B2545] text-white font-bold py-3.5 px-6 rounded-xl hover:bg-blue-900 active:scale-[0.98] transition-all shadow-lg shadow-blue-900/20 text-sm md:text-base"
+                className="flex items-center w-full justify-center  bg-[#0B2545] text-white font-bold py-3.5 px-6 rounded-xl hover:bg-blue-900 active:scale-[0.98] transition-all shadow-lg shadow-blue-900/20 text-sm md:text-base"
               >
                 <span>Ver Disponibilidade</span>
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
               </Link>
+              <button 
+                onClick={() => {
+                  deletarAtivo(ativoSelecionado.id)
+                  fecharModal()
+                }}
+                className="flex items-center justify-center bg-red-700 text-white font-bold py-3.5 px-6 rounded-xl hover:bg-red-600 active:scale-[0.98] transition-all shadow-lg shadow-blue-900/20 text-sm md:text-base">
+                <span>Deletar</span>
+              </button>
+
             </footer>
 
           </article>
